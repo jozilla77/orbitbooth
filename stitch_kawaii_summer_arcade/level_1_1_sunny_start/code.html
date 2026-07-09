@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Orbit Loxley - Game Level</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;family=Rubik:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#fdf9f0",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-background": "#1c1c17",
+                        "on-primary-fixed": "#40000b",
+                        "on-tertiary-container": "#4c3e00",
+                        "on-surface-variant": "#5b4041",
+                        "surface-container-low": "#f7f3ea",
+                        "surface-bright": "#fdf9f0",
+                        "inverse-primary": "#ffb3b5",
+                        "tertiary-fixed-dim": "#e8c426",
+                        "secondary": "#006687",
+                        "primary-fixed-dim": "#ffb3b5",
+                        "tertiary": "#705d00",
+                        "on-tertiary-fixed": "#221b00",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#005572",
+                        "tertiary-fixed": "#ffe173",
+                        "surface-container-highest": "#e6e2d9",
+                        "on-primary-fixed-variant": "#920025",
+                        "inverse-surface": "#31312b",
+                        "secondary-fixed": "#c1e8ff",
+                        "surface-container-high": "#ece8df",
+                        "outline-variant": "#e3bebe",
+                        "primary": "#b71135",
+                        "on-secondary-fixed-variant": "#004d66",
+                        "secondary-container": "#5fcdff",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#ffdada",
+                        "on-secondary-fixed": "#001e2b",
+                        "surface-variant": "#e6e2d9",
+                        "surface-tint": "#ba1537",
+                        "on-primary-container": "#fffbff",
+                        "tertiary-container": "#caa800",
+                        "outline": "#8f6f70",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#73d1ff",
+                        "surface-dim": "#dddad1",
+                        "surface-container": "#f1eee5",
+                        "on-surface": "#1c1c17",
+                        "on-tertiary-fixed-variant": "#554500",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#da314b",
+                        "surface": "#fdf9f0",
+                        "inverse-on-surface": "#f4f0e8",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "safe-area": "32px",
+                        "gutter": "16px",
+                        "unit": "8px",
+                        "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "display-xl": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-xl-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "label-bold": ["Rubik"],
+                        "display-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "headline-md": ["28px", { "lineHeight": "34px", "fontWeight": "700" }],
+                        "display-xl-mobile": ["32px", { "lineHeight": "38px", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "500" }],
+                        "headline-sm": ["22px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "label-bold": ["14px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "display-lg": ["36px", { "lineHeight": "44px", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .kawaii-button {
+            transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        .kawaii-button:active {
+            transform: translateY(4px);
+        }
+        .kawaii-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+        .kawaii-card {
+            box-shadow: 0 8px 0 var(--tw-shadow-color, rgba(0,0,0,0.1));
+            border-radius: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .kawaii-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 8px 8px;
+            pointer-events: none;
+        }
+        .progress-bar-inner {
+            background: linear-gradient(90deg, #ffb3b5 0%, #b71135 100%);
+            border-radius: 9999px;
+            position: relative;
+        }
+        .progress-bar-inner::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            height: 40%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 100%);
+            border-radius: inherit;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen overflow-x-hidden font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top App Bar (Modified for Game Context) -->
+<header class="fixed top-0 w-full z-40 bg-background/80 backdrop-blur-md border-b-4 border-surface-container-highest shadow-sm">
+<div class="flex justify-between items-center w-full px-safe py-gutter max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<span class="font-display-lg text-display-lg tracking-tight text-primary">Orbit Loxley</span>
+<div class="hidden md:flex bg-surface-container-low px-4 py-2 rounded-full border-2 border-surface-container-highest shadow-[0_4px_0_var(--tw-colors-surface-container-highest)]">
+<span class="font-label-bold text-label-bold text-on-surface-variant mr-2">Level</span>
+<span class="font-headline-sm text-headline-sm text-primary">1-1</span>
+</div>
+</div>
+<div class="flex items-center gap-safe">
+<div class="flex bg-surface-container-low px-4 py-2 rounded-full border-2 border-surface-container-highest shadow-[0_4px_0_var(--tw-colors-surface-container-highest)]">
+<span class="material-symbols-outlined text-tertiary-container mr-2" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-headline-sm text-headline-sm text-on-background">12,450</span>
+</div>
+<div class="flex bg-surface-container-low px-4 py-2 rounded-full border-2 border-surface-container-highest shadow-[0_4px_0_var(--tw-colors-surface-container-highest)]">
+<span class="material-symbols-outlined text-secondary mr-2" style="font-variation-settings: 'FILL' 1;">timer</span>
+<span class="font-headline-sm text-headline-sm text-on-background">02:45</span>
+</div>
+<button class="kawaii-button bg-primary text-on-primary w-12 h-12 rounded-full shadow-[0_6px_0_#920025] flex items-center justify-center hover:scale-105">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Game Canvas -->
+<main class="pt-[100px] pb-[100px] min-h-screen flex flex-col lg:flex-row gap-safe px-safe max-w-7xl mx-auto">
+<!-- Left Side: Character & Leaderboard Snippet -->
+<aside class="w-full lg:w-1/3 flex flex-col gap-safe order-2 lg:order-1">
+<!-- Character Integration -->
+<div class="kawaii-card bg-surface-container-lowest border-4 border-surface-container-highest shadow-[0_8px_0_var(--tw-colors-surface-container-highest)] p-container-padding flex flex-col items-center justify-center relative">
+<div class="absolute top-0 right-0 w-24 h-24 bg-secondary-container rounded-bl-full opacity-50 -z-10"></div>
+<img class="w-48 h-auto object-contain hover:scale-105 transition-transform duration-300 z-10" data-alt="A cute, pink mascot character with round ears, wearing headphones and a blue gingham dress, holding a red ring, in a kawaii style with a light background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvMrUJxELtD-vrJ_LXggcb85hWp7nW2smaCugR1TvW6nlC40DkzCjQFwsGzks7-QJXsEzsY_FvXMfJ_L5bQOe-exgQqrbu4F4wPAatEpFxWxEJ9Jpg-Q8NF3u5OGkzgXZzSMu5UH12AJJzE2YhZ253hfLSpl5U49HcxwHd_OZhmpmarIaDN1lbofsftqZoVXedG60KFYD07WGA2AsPK8tTMQZ0T2q-fxk271WGA-SRpCgBnwqunw9k0KPnSTL50zVtaYI"/>
+<div class="mt-4 text-center">
+<h3 class="font-headline-md text-headline-md text-primary">Loxley</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Ready to play!</p>
+</div>
+</div>
+<!-- Leaderboard Snippet -->
+<div class="kawaii-card bg-surface-container-lowest border-4 border-surface-container-highest shadow-[0_8px_0_var(--tw-colors-surface-container-highest)] p-container-padding">
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-4 flex items-center">
+<span class="material-symbols-outlined text-tertiary-container mr-2" style="font-variation-settings: 'FILL' 1;">trophy</span>
+                    Current Rank
+                </h3>
+<div class="flex flex-col gap-unit">
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-xl">
+<div class="flex items-center gap-3">
+<span class="font-label-bold text-label-bold text-on-surface-variant w-4 text-center">1</span>
+<div class="w-8 h-8 bg-tertiary-container rounded-full flex items-center justify-center text-on-tertiary font-bold">M</div>
+<span class="font-body-md text-body-md text-on-background font-bold">Miko</span>
+</div>
+<span class="font-label-bold text-label-bold text-primary">15,200</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-primary-container rounded-xl border-2 border-primary shadow-[0_2px_0_#920025]">
+<div class="flex items-center gap-3">
+<span class="font-label-bold text-label-bold text-primary w-4 text-center">2</span>
+<div class="w-8 h-8 bg-surface-container-lowest rounded-full flex items-center justify-center text-primary font-bold shadow-sm">Y</div>
+<span class="font-body-md text-body-md text-on-primary-container font-bold">You</span>
+</div>
+<span class="font-label-bold text-label-bold text-on-primary-container font-bold">12,450</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-xl">
+<div class="flex items-center gap-3">
+<span class="font-label-bold text-label-bold text-on-surface-variant w-4 text-center">3</span>
+<div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-on-secondary font-bold">K</div>
+<span class="font-body-md text-body-md text-on-background font-bold">Kenta</span>
+</div>
+<span class="font-label-bold text-label-bold text-primary">11,100</span>
+</div>
+</div>
+</div>
+<!-- Progress / Energy -->
+<div class="kawaii-card bg-surface-container-lowest border-4 border-surface-container-highest shadow-[0_8px_0_var(--tw-colors-surface-container-highest)] p-container-padding">
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-4">Level Progress</h3>
+<div class="h-8 bg-surface-container-high rounded-full overflow-hidden border-2 border-surface-variant">
+<div class="progress-bar-inner h-full w-[65%]"></div>
+</div>
+</div>
+</aside>
+<!-- Right Side: Game Field -->
+<section class="w-full lg:w-2/3 order-1 lg:order-2 flex flex-col justify-center items-center">
+<div class="relative w-full aspect-square md:aspect-video bg-surface-container-lowest rounded-[3rem] border-8 border-surface-variant shadow-[0_16px_0_var(--tw-colors-surface-variant)] p-8 overflow-hidden">
+<!-- Decorative Background Elements -->
+<div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-colors-primary)_0%,_transparent_100%)]"></div>
+<svg class="absolute top-0 right-0 w-32 h-32 text-primary opacity-20 transform translate-x-8 -translate-y-8" fill="currentColor" viewbox="0 0 100 100">
+<circle cx="100" cy="0" fill="none" r="80" stroke="currentColor" stroke-width="2"></circle>
+<circle cx="100" cy="0" fill="none" r="60" stroke="currentColor" stroke-width="4"></circle>
+</svg>
+<!-- Game Grid Placeholder -->
+<div class="absolute inset-0 m-12 grid grid-cols-4 grid-rows-4 gap-4">
+<!-- Generating some dummy tiles for the "game field" -->
+<div class="kawaii-button bg-secondary-container rounded-xl shadow-[0_6px_0_#005572] flex items-center justify-center hover:scale-105 cursor-pointer">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+</div>
+<div class="kawaii-button bg-tertiary-container rounded-xl shadow-[0_6px_0_#4c3e00] flex items-center justify-center hover:scale-105 cursor-pointer">
+<span class="material-symbols-outlined text-on-tertiary-container text-4xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="kawaii-button bg-primary-container rounded-xl shadow-[0_6px_0_#920025] flex items-center justify-center hover:scale-105 cursor-pointer">
+<span class="material-symbols-outlined text-on-primary-container text-4xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="kawaii-button bg-surface-container-high rounded-xl shadow-[0_6px_0_#dddad1] flex items-center justify-center opacity-50"></div>
+<div class="kawaii-button bg-tertiary-container rounded-xl shadow-[0_6px_0_#4c3e00] flex items-center justify-center hover:scale-105 cursor-pointer">
+<span class="material-symbols-outlined text-on-tertiary-container text-4xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="kawaii-button bg-secondary-container rounded-xl shadow-[0_6px_0_#005572] flex items-center justify-center hover:scale-105 cursor-pointer">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+</div>
+<div class="kawaii-button bg-surface-container-high rounded-xl shadow-[0_6px_0_#dddad1] flex items-center justify-center opacity-50"></div>
+<div class="kawaii-button bg-primary-container rounded-xl shadow-[0_6px_0_#920025] flex items-center justify-center hover:scale-105 cursor-pointer">
+<span class="material-symbols-outlined text-on-primary-container text-4xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="kawaii-button bg-primary-container rounded-xl shadow-[0_6px_0_#920025] flex items-center justify-center hover:scale-105 cursor-pointer">
+<span class="material-symbols-outlined text-on-primary-container text-4xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="kawaii-button bg-surface-container-high rounded-xl shadow-[0_6px_0_#dddad1] flex items-center justify-center opacity-50"></div>
+<div class="kawaii-button bg-secondary-container rounded-xl shadow-[0_6px_0_#005572] flex items-center justify-center hover:scale-105 cursor-pointer">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+</div>
+<div class="kawaii-button bg-tertiary-container rounded-xl shadow-[0_6px_0_#4c3e00] flex items-center justify-center hover:scale-105 cursor-pointer">
+<span class="material-symbols-outlined text-on-tertiary-container text-4xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="kawaii-button bg-surface-container-high rounded-xl shadow-[0_6px_0_#dddad1] flex items-center justify-center opacity-50"></div>
+<div class="kawaii-button bg-primary-container rounded-xl shadow-[0_6px_0_#920025] flex items-center justify-center hover:scale-105 cursor-pointer">
+<span class="material-symbols-outlined text-on-primary-container text-4xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="kawaii-button bg-tertiary-container rounded-xl shadow-[0_6px_0_#4c3e00] flex items-center justify-center hover:scale-105 cursor-pointer">
+<span class="material-symbols-outlined text-on-tertiary-container text-4xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="kawaii-button bg-secondary-container rounded-xl shadow-[0_6px_0_#005572] flex items-center justify-center hover:scale-105 cursor-pointer">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+</div>
+</div>
+</div>
+<!-- In-Game Action Bar -->
+<div class="mt-8 flex gap-4 w-full max-w-md">
+<button class="flex-1 kawaii-button bg-surface-container-lowest text-primary py-4 rounded-xl shadow-[0_6px_0_var(--tw-colors-surface-container-highest)] border-2 border-surface-container-highest font-label-bold text-label-bold flex items-center justify-center gap-2 hover:bg-surface-container-low">
+<span class="material-symbols-outlined">refresh</span> Restart
+                </button>
+<button class="flex-1 kawaii-button bg-secondary text-on-secondary py-4 rounded-xl shadow-[0_6px_0_#004d66] font-label-bold text-label-bold flex items-center justify-center gap-2 hover:bg-secondary/90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">magic_button</span> Hint
+                </button>
+</div>
+</section>
+</main>
+<!-- Bottom Nav Bar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-end px-gutter pb-safe pt-unit bg-surface-container-lowest border-t-4 border-surface-container-highest shadow-[0_-4px_10px_rgba(0,0,0,0.05)] rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 opacity-70 hover:opacity-100 hover:scale-105 transition-transform duration-75" href="#">
+<span class="material-symbols-outlined text-2xl mb-1">home</span>
+<span class="font-label-bold text-label-bold">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-6 py-2 scale-110 -translate-y-2 shadow-md transition-all active:scale-95 duration-75" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+<span class="font-label-bold text-label-bold">Mini Games</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 opacity-70 hover:opacity-100 hover:scale-105 transition-transform duration-75" href="#">
+<span class="material-symbols-outlined text-2xl mb-1">leaderboard</span>
+<span class="font-label-bold text-label-bold">Leaderboard</span>
+</a>
+</nav>
+<script>
+        // Simple script to handle visual click feedback on tiles
+        document.querySelectorAll('.kawaii-button').forEach(btn => {
+            btn.addEventListener('mousedown', function() {
+                this.style.transform = 'translateY(4px)';
+            });
+            btn.addEventListener('mouseup', function() {
+                this.style.transform = 'translateY(0)';
+            });
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

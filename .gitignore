@@ -1,0 +1,16 @@
+# General
+.DS_Store
+.vscode/
+.idea/
+
+# Flutter/Dart
+frontend/.dart_tool/
+frontend/.packages
+frontend/build/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+
+# Go
+backend/public/
+backend/main
+backend/main.exe

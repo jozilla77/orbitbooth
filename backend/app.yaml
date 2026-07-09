@@ -1,0 +1,27 @@
+runtime: go122
+env: standard
+
+# For Go apps, 'main' represents the root package
+main: ./
+
+# Use automatic scaling with min_instances: 0 to scale to zero
+automatic_scaling:
+  min_instances: 0
+  max_instances: 10
+  target_cpu_utilization: 0.65
+
+# Ensure these files exist by copying Flutter web build output to backend/public
+handlers:
+  # Route the flutter app static files
+  - url: /games1/(.*\.(js|html|css|png|jpg|gif|json|ico|wasm))$
+    static_files: public/\1
+    upload: public/.*\.(js|html|css|png|jpg|gif|json|ico|wasm)$
+
+  # Route the root /games1/ to the index.html
+  - url: /games1/?
+    static_files: public/index.html
+    upload: public/index.html
+
+  # Route all API requests to the Go application
+  - url: /games1/api/.*
+    script: auto

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Loxley Orbit - Level 2 - Chiang Mai Mountains</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;family=Rubik:wght@700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#ffb3b5",
+                        "on-primary-container": "#fffbff",
+                        "outline": "#8f6f70",
+                        "primary": "#b71135",
+                        "outline-variant": "#e3bebe",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1c1c17",
+                        "surface-variant": "#e6e2d9",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#fdf9f0",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#73d1ff",
+                        "on-tertiary-container": "#4c3e00",
+                        "inverse-on-surface": "#f4f0e8",
+                        "surface-container-highest": "#e6e2d9",
+                        "on-secondary-fixed": "#001e2b",
+                        "inverse-primary": "#ffb3b5",
+                        "primary-container": "#da314b",
+                        "on-error-container": "#93000a",
+                        "secondary": "#006687",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#1c1c17",
+                        "tertiary-fixed": "#ffe173",
+                        "primary-fixed": "#ffdada",
+                        "on-primary-fixed": "#40000b",
+                        "surface-container": "#f1eee5",
+                        "on-secondary-fixed-variant": "#004d66",
+                        "surface": "#fdf9f0",
+                        "on-surface-variant": "#5b4041",
+                        "tertiary-container": "#caa800",
+                        "surface-container-high": "#ece8df",
+                        "tertiary-fixed-dim": "#e8c426",
+                        "on-tertiary-fixed": "#221b00",
+                        "tertiary": "#705d00",
+                        "inverse-surface": "#31312b",
+                        "background": "#fdf9f0",
+                        "secondary-fixed": "#c1e8ff",
+                        "on-primary-fixed-variant": "#920025",
+                        "surface-dim": "#dddad1",
+                        "surface-container-low": "#f7f3ea",
+                        "on-tertiary-fixed-variant": "#554500",
+                        "surface-tint": "#ba1537",
+                        "on-secondary-container": "#005572",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#5fcdff",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "safe-area": "32px",
+                        "gutter": "16px",
+                        "container-padding": "24px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "display-xl-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "display-xl": ["Plus Jakarta Sans"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-bold": ["Rubik"]
+                    },
+                    "fontSize": {
+                        "display-xl-mobile": ["32px", { "lineHeight": "38px", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "500" }],
+                        "display-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-sm": ["22px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "headline-md": ["28px", { "lineHeight": "34px", "fontWeight": "700" }],
+                        "display-lg": ["36px", { "lineHeight": "44px", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "label-bold": ["14px", { "lineHeight": "20px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            overflow: hidden;
+            touch-action: none;
+        }
+        
+        .glossy-btn {
+            position: relative;
+            box-shadow: 0 6px 0 var(--tw-shadow-color);
+            transition: all 0.1s ease;
+        }
+        .glossy-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 var(--tw-shadow-color);
+        }
+        .glossy-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 30%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.6), transparent);
+            border-radius: 9999px;
+            pointer-events: none;
+        }
+        
+        .hud-panel {
+            background-color: rgba(253, 249, 240, 0.85);
+            backdrop-filter: blur(8px);
+            border: 4px solid var(--tw-colors-primary-container);
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.5), 0 8px 0 var(--tw-colors-primary);
+        }
+
+        @keyframes scrollBackground {
+            from { background-position: 0 0; }
+            to { background-position: -200% 0; }
+        }
+
+        .scrolling-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC61dM3Xs8LtyMq-AaS5nPFR65B9WLI80rlFOx4HswE8iD_VKmKLDUwd30jZ6ARZ1-q2lGKNS5qqml5HUXsoR41PhSUbZXK0mq2P5nvcyJAS1udFGJnz-FS3xtm-DzGjXIeI7V0eNuDu6KrJlNqZz2Sf4wF0YTQkiEBpkLoPhz8OkOldIywZhJFRRmTMgDqccV_qJk9RJnXiGXX8Nh_dpgBaO-ii7M8QKjxdWVfrJHrOsmRKR1bd1f3og');
+            background-size: auto 100%;
+            background-repeat: repeat-x;
+            animation: scrollBackground 10s linear infinite; /* 2x Speed */
+            z-index: -1;
+        }
+
+        @keyframes moveObstacleFast {
+            from { left: 100%; }
+            to { left: -20%; }
+        }
+
+        .obstacle-anim {
+            animation: moveObstacleFast 2.5s linear infinite; /* 2x Speed */
+        }
+
+        /* Jetpack flame */
+        @keyframes flicker {
+            0% { transform: scaleY(1); opacity: 0.8; }
+            50% { transform: scaleY(1.4); opacity: 1; }
+            100% { transform: scaleY(1); opacity: 0.8; }
+        }
+        .flame {
+            animation: flicker 0.1s infinite alternate;
+            transition: transform 0.15s ease-out;
+        }
+        
+        .flame-blast {
+            transform: scaleY(2) !important;
+            opacity: 1 !important;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-background h-screen w-screen relative">
+<div class="scrolling-bg"></div>
+<!-- HUD - Top Area -->
+<header class="absolute top-0 left-0 w-full p-safe-area flex justify-between items-start z-40 pointer-events-none">
+<!-- Score & Level Info -->
+<div class="hud-panel rounded-xl p-unit flex items-center gap-unit pointer-events-auto">
+<div class="bg-tertiary-container text-on-tertiary-container rounded-full w-12 h-12 flex items-center justify-center font-display-xl-mobile shadow-[0_4px_0_#705d00]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex flex-col pr-unit">
+<span class="font-label-bold text-primary">SCORE</span>
+<span class="font-display-xl-mobile text-on-surface leading-none">14,250</span>
+</div>
+</div>
+<!-- Pause Button -->
+<button class="glossy-btn bg-surface-variant rounded-full w-14 h-14 flex items-center justify-center pointer-events-auto shadow-surface-dim">
+<span class="material-symbols-outlined text-primary text-3xl font-bold">pause</span>
+</button>
+</header>
+<!-- Game Canvas Area -->
+<main class="absolute inset-0 z-10 overflow-hidden" id="game-canvas">
+<!-- Obstacles (Pagodas & Trees) -->
+<div class="absolute top-0 w-24 bg-tertiary shadow-lg border-4 border-on-tertiary-container rounded-b-full obstacle-anim" style="height: 35%; animation-delay: 0s;">
+<div class="absolute bottom-[-20px] left-1/2 transform -translate-x-1/2 w-8 h-8 bg-on-surface-variant rounded-full"></div>
+</div>
+<div class="absolute bottom-0 w-32 flex flex-col items-center obstacle-anim" style="height: 40%; animation-delay: 0s;">
+<div class="w-4 h-12 bg-tertiary-fixed-dim rounded-t-full shadow-lg"></div>
+<div class="w-16 h-8 bg-surface-dim border-2 border-outline-variant shadow-lg"></div>
+<div class="w-24 h-12 bg-surface-dim border-2 border-outline-variant shadow-lg"></div>
+<div class="w-32 flex-1 bg-surface-dim border-2 border-outline-variant shadow-lg"></div>
+</div>
+<div class="absolute top-0 w-28 bg-tertiary shadow-lg border-4 border-on-tertiary-container rounded-b-full obstacle-anim" style="height: 25%; animation-delay: 1.25s;"></div>
+<div class="absolute bottom-0 w-32 flex flex-col items-center obstacle-anim" style="height: 50%; animation-delay: 1.25s;">
+<div class="w-4 h-12 bg-tertiary-fixed-dim rounded-t-full shadow-lg"></div>
+<div class="w-16 h-8 bg-surface-dim border-2 border-outline-variant shadow-lg"></div>
+<div class="w-24 h-12 bg-surface-dim border-2 border-outline-variant shadow-lg"></div>
+<div class="w-32 flex-1 bg-surface-dim border-2 border-outline-variant shadow-lg"></div>
+</div>
+<!-- Collectibles -->
+<div class="absolute top-1/2 left-2/3 transform -translate-x-1/2 -translate-y-1/2 obstacle-anim" style="animation-delay: 0.6s;">
+<span class="material-symbols-outlined text-tertiary-fixed text-6xl drop-shadow-[0_0_15px_rgba(255,225,115,0.8)]" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<!-- Main Character (Loxley) -->
+<div class="absolute top-1/2 left-[20%] transform -translate-x-1/2 -translate-y-1/2 z-30 transition-transform duration-75" id="player-character">
+<!-- Injecting provided image -->
+<img alt="Loxley in Jetpack" class="w-48 h-48 md:w-64 md:h-64 object-contain filter drop-shadow-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHwIxWk-fOZk003TQRRsk9J2QbUwVP8EJ5-Gji7Aa33Kw6azgn28tAhdJwcs6Jwdj5E3yktpTddKOvExrTKXRlrF15oWp3b0pf5YtJmcudcI-AwV9Jkjo_fiffzQkhfZEYd7gErwP0SgZu8DBDaAAy0qfj-g6dR_soLl5tt0bYdrrdEMhFPy1OdX7MlyCxikNM53AZ1oF12CWs8vSn_SUlPgYaBC5c_xJzAMm6QTHwM_y7pxBcLb08tCru4Es9EtuNM8Y"/>
+<!-- Simulated Jetpack Flame -->
+<div class="absolute bottom-4 left-1/4 w-12 h-24 bg-gradient-to-t from-secondary-container to-transparent rounded-full flame opacity-60 mix-blend-screen blur-sm transform -rotate-15" id="jet-flame-1"></div>
+<div class="absolute bottom-8 left-1/3 w-8 h-16 bg-gradient-to-t from-surface-lowest to-transparent rounded-full flame mix-blend-screen blur-sm transform -rotate-15" id="jet-flame-2"></div>
+</div>
+</main>
+<!-- Controls - Bottom Area (Tablet/Landscape friendly) -->
+<footer class="absolute bottom-0 w-full p-safe-area flex justify-between items-end z-40 pointer-events-none md:px-32">
+<!-- Joystick (Disabled for Flappy mode but preserved visually) -->
+<div class="w-32 h-32 rounded-full bg-surface-variant/50 backdrop-blur-sm border-4 border-surface-container shadow-inner flex items-center justify-center opacity-50">
+<div class="w-16 h-16 rounded-full bg-primary-container shadow-[0_6px_0_var(--tw-colors-primary)] flex items-center justify-center relative">
+<div class="w-8 h-8 rounded-full bg-white/30 absolute top-2"></div>
+</div>
+</div>
+<!-- Action Buttons (Right) -->
+<div class="flex gap-gutter pointer-events-auto">
+<button class="w-20 h-20 rounded-full bg-secondary-container shadow-[0_8px_0_var(--tw-colors-secondary)] flex items-center justify-center glossy-btn">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl" style="font-variation-settings: 'FILL' 1;">shield</span>
+</button>
+<button class="w-24 h-24 rounded-full bg-primary-fixed-dim shadow-[0_8px_0_var(--tw-colors-primary)] flex items-center justify-center glossy-btn" id="flap-btn">
+<span class="material-symbols-outlined text-on-primary-fixed text-5xl" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+</button>
+</div>
+</footer>
+<!-- Level Intro Overlay -->
+<div class="absolute inset-0 z-50 bg-background/90 flex flex-col items-center justify-center transition-opacity duration-1000 pointer-events-none" id="level-intro">
+<h2 class="font-display-xl text-primary drop-shadow-md text-center">Level 2</h2>
+<h1 class="font-display-xl-mobile text-on-surface-variant text-center mt-unit">Chiang Mai Mountains</h1>
+<div class="mt-8 bg-surface-container-highest px-8 py-4 rounded-full border-4 border-outline-variant animate-pulse">
+<span class="font-headline-sm text-on-surface">Dodge the pagodas!</span>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const intro = document.getElementById('level-intro');
+                if(intro) {
+                    intro.style.opacity = '0';
+                    setTimeout(() => intro.remove(), 1000);
+                }
+            }, 2000);
+
+            // Flappy Bird Mechanic
+            const player = document.getElementById('player-character');
+            const flame1 = document.getElementById('jet-flame-1');
+            const flame2 = document.getElementById('jet-flame-2');
+            
+            let yPos = window.innerHeight / 2;
+            let velocity = 0;
+            const gravity = 0.6;
+            const jump = -10;
+            
+            function flap() {
+                velocity = jump;
+                // Jet blast animation
+                flame1.classList.add('flame-blast');
+                flame2.classList.add('flame-blast');
+                setTimeout(() => {
+                    flame1.classList.remove('flame-blast');
+                    flame2.classList.remove('flame-blast');
+                }, 150);
+            }
+
+            // Bind controls
+            document.addEventListener('mousedown', flap);
+            document.addEventListener('touchstart', flap);
+            document.addEventListener('keydown', (e) => { if(e.code === 'Space') flap(); });
+            document.getElementById('flap-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                flap();
+            });
+            document.getElementById('flap-btn').addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+                flap();
+            });
+
+            function gameLoop() {
+                velocity += gravity;
+                yPos += velocity;
+                
+                const maxBottom = window.innerHeight - player.offsetHeight / 2;
+                if (yPos > maxBottom) {
+                    yPos = maxBottom;
+                    velocity = 0;
+                }
+                if (yPos < player.offsetHeight / 2) {
+                    yPos = player.offsetHeight / 2;
+                    velocity = 0;
+                }
+                
+                player.style.top = yPos + 'px';
+                
+                // Tilt character based on velocity
+                let rotation = Math.min(Math.max(velocity * 2, -25), 40);
+                player.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+                
+                requestAnimationFrame(gameLoop);
+            }
+            gameLoop();
+        });
+    </script>
+</body></html>

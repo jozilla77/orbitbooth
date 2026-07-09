@@ -1,0 +1,301 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Orbit Loxley - Mini Games</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Be+Vietnam+Pro:wght@500&amp;family=Rubik:wght@700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "background": "#fdf9f0",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-background": "#1c1c17",
+                      "on-primary-fixed": "#40000b",
+                      "on-tertiary-container": "#4c3e00",
+                      "on-surface-variant": "#5b4041",
+                      "surface-container-low": "#f7f3ea",
+                      "surface-bright": "#fdf9f0",
+                      "inverse-primary": "#ffb3b5",
+                      "tertiary-fixed-dim": "#e8c426",
+                      "secondary": "#006687",
+                      "primary-fixed-dim": "#ffb3b5",
+                      "tertiary": "#705d00",
+                      "on-tertiary-fixed": "#221b00",
+                      "error-container": "#ffdad6",
+                      "on-secondary-container": "#005572",
+                      "tertiary-fixed": "#ffe173",
+                      "surface-container-highest": "#e6e2d9",
+                      "on-primary-fixed-variant": "#920025",
+                      "inverse-surface": "#31312b",
+                      "secondary-fixed": "#c1e8ff",
+                      "surface-container-high": "#ece8df",
+                      "outline-variant": "#e3bebe",
+                      "primary": "#b71135",
+                      "on-secondary-fixed-variant": "#004d66",
+                      "secondary-container": "#5fcdff",
+                      "on-secondary": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "primary-fixed": "#ffdada",
+                      "on-secondary-fixed": "#001e2b",
+                      "surface-variant": "#e6e2d9",
+                      "surface-tint": "#ba1537",
+                      "on-primary-container": "#fffbff",
+                      "tertiary-container": "#caa800",
+                      "outline": "#8f6f70",
+                      "error": "#ba1a1a",
+                      "secondary-fixed-dim": "#73d1ff",
+                      "surface-dim": "#dddad1",
+                      "surface-container": "#f1eee5",
+                      "on-surface": "#1c1c17",
+                      "on-tertiary-fixed-variant": "#554500",
+                      "on-tertiary": "#ffffff",
+                      "primary-container": "#da314b",
+                      "surface": "#fdf9f0",
+                      "inverse-on-surface": "#f4f0e8",
+                      "on-error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "safe-area": "32px",
+                      "gutter": "16px",
+                      "unit": "8px",
+                      "container-padding": "24px"
+              },
+              "fontFamily": {
+                      "display-xl": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-md": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display-xl-mobile": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-lg": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-sm": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-bold": [
+                              "Rubik"
+                      ],
+                      "display-lg": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "display-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-xl-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "38px",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "26px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-sm": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "36px",
+                              {
+                                      "lineHeight": "44px",
+                                      "fontWeight": "800"
+                              }
+                      ]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        .glossy-overlay {
+            background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 30%);
+        }
+        .bouncy-hover:hover {
+            transform: translateY(-4px) scale(1.02);
+        }
+        .bouncy-active:active {
+            transform: translateY(4px) scale(0.98);
+        }
+        .cloud-bg {
+            background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+        }
+      </style>
+</head>
+<body class="bg-[#87CEEB] min-h-screen font-body-md text-on-surface overflow-x-hidden pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b-4 border-surface-container-highest shadow-sm">
+<div class="flex justify-between items-center w-full px-safe py-gutter max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center border-2 border-primary shadow-[0_4px_0_rgb(183,17,53)]">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">face</span>
+</div>
+<div>
+<h1 class="font-display-lg text-display-lg tracking-tight text-primary m-0 leading-none">Loxley Orbit</h1>
+<p class="font-label-bold text-label-bold text-on-surface-variant">Hello, Explorer!</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-tertiary-container text-on-tertiary-container px-4 py-2 rounded-xl font-headline-sm text-headline-sm flex items-center gap-2 border-b-4 border-[#705d00] shadow-sm">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">stars</span>
+                    Total Score: 0
+                </div>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary hover:scale-105 transition-transform active:translate-y-1 transition-all duration-100">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary hover:scale-105 transition-transform active:translate-y-1 transition-all duration-100">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="pt-32 px-safe max-w-7xl mx-auto relative z-10">
+<!-- Decorative Clouds -->
+<div class="absolute top-20 left-10 w-48 h-24 cloud-bg rounded-full opacity-50 -z-10 blur-xl"></div>
+<div class="absolute top-40 right-20 w-64 h-32 cloud-bg rounded-full opacity-60 -z-10 blur-2xl"></div>
+<div class="text-center mb-8">
+<h2 class="font-display-xl text-display-xl text-surface-container-lowest drop-shadow-md mb-2">Loxley Orbit Jetpacks Adventure</h2>
+<p class="font-body-lg text-body-lg text-surface-container-lowest drop-shadow">Explore vibrant Thai-themed levels and earn stars!</p>
+</div>
+<!-- Bento Grid for Games -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Game Card 1: Sky Jump -->
+<div class="relative bg-secondary-container rounded-xl p-6 border-b-8 border-[#005572] shadow-lg transition-all duration-200 bouncy-hover cursor-pointer overflow-hidden group">
+<div class="absolute inset-0 glossy-overlay z-10 pointer-events-none"></div>
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+<div class="relative z-20 flex flex-col h-full">
+<div class="w-20 h-20 bg-secondary rounded-2xl flex items-center justify-center mb-4 border-b-4 border-[#001e2b] shadow-inner mx-auto group-hover:-translate-y-2 transition-transform">
+<span class="material-symbols-outlined text-on-secondary text-5xl" style="font-variation-settings: 'FILL' 1;">flight_takeoff</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-secondary-container text-center mb-2">Bangkok Bounce</h3>
+<p class="font-body-md text-body-md text-on-secondary-container/80 text-center flex-grow">Jetpack through the Bangkok skyline and collect golden stars!</p>
+<div class="flex justify-center gap-1 mt-4">
+<span class="material-symbols-outlined text-surface-container-highest text-3xl">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-3xl">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-3xl">star</span>
+</div>
+</div>
+</div>
+<!-- Game Card 2: Berry Blast -->
+<div class="relative bg-primary-container rounded-xl p-6 border-b-8 border-[#920025] shadow-lg transition-all duration-200 bouncy-hover cursor-pointer overflow-hidden group">
+<div class="absolute inset-0 glossy-overlay z-10 pointer-events-none"></div>
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+<div class="relative z-20 flex flex-col h-full">
+<div class="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center mb-4 border-b-4 border-[#40000b] shadow-inner mx-auto group-hover:-translate-y-2 transition-transform">
+<span class="material-symbols-outlined text-on-primary text-5xl" style="font-variation-settings: 'FILL' 1;">cruelty_free</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-primary-container text-center mb-2">Mango Match</h3>
+<p class="font-body-md text-body-md text-on-primary-container/80 text-center flex-grow">Match delicious Thai mangoes for a sweet high score!</p>
+<div class="flex justify-center gap-1 mt-4">
+<span class="material-symbols-outlined text-surface-container-highest text-3xl">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-3xl">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-3xl">star</span>
+</div>
+</div>
+</div>
+<!-- Game Card 3: River Race -->
+<div class="relative bg-tertiary-container rounded-xl p-6 border-b-8 border-[#4c3e00] shadow-lg transition-all duration-200 bouncy-hover cursor-pointer overflow-hidden group">
+<div class="absolute inset-0 glossy-overlay z-10 pointer-events-none"></div>
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+<div class="relative z-20 flex flex-col h-full">
+<div class="w-20 h-20 bg-tertiary rounded-2xl flex items-center justify-center mb-4 border-b-4 border-[#221b00] shadow-inner mx-auto group-hover:-translate-y-2 transition-transform">
+<span class="material-symbols-outlined text-on-tertiary text-5xl" style="font-variation-settings: 'FILL' 1;">sailing</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-tertiary-container text-center mb-2">Mekong Rush</h3>
+<p class="font-body-md text-body-md text-on-tertiary-container/80 text-center flex-grow">Navigate the mighty Mekong river and dodge the rapids!</p>
+<div class="flex justify-center gap-1 mt-4">
+<span class="material-symbols-outlined text-surface-container-highest text-3xl">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-3xl">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-3xl">star</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-end px-gutter pb-safe pt-unit bg-surface-container-lowest border-t-4 border-surface-container-highest shadow-[0_-4px_10px_rgba(0,0,0,0.05)] rounded-t-lg md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 opacity-70 hover:opacity-100 hover:scale-105 transition-all">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-bold text-label-bold">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-6 py-2 scale-110 -translate-y-2 shadow-md transition-all active:scale-95 duration-75">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+<span class="font-label-bold text-label-bold">Mini Games</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 opacity-70 hover:opacity-100 hover:scale-105 transition-all">
+<span class="material-symbols-outlined mb-1">leaderboard</span>
+<span class="font-label-bold text-label-bold">Hall of Fame</span>
+</button>
+</nav>
+<!-- Desktop Nav Cluster (Hidden on mobile) -->
+<div class="hidden md:flex fixed bottom-safe right-safe z-50 gap-4">
+<button class="w-16 h-16 rounded-full bg-surface-container-lowest border-b-4 border-surface-container-highest shadow-lg flex items-center justify-center text-on-surface-variant hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">home</span>
+</button>
+<button class="w-16 h-16 rounded-full bg-primary-container border-b-4 border-[#920025] shadow-lg flex items-center justify-center text-on-primary-container scale-110 hover:scale-125 transition-transform active:translate-y-2">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+</button>
+<button class="w-16 h-16 rounded-full bg-surface-container-lowest border-b-4 border-surface-container-highest shadow-lg flex items-center justify-center text-on-surface-variant hover:scale-110 transition-transform" title="Hall of Fame">
+<span class="material-symbols-outlined text-3xl">leaderboard</span>
+</button>
+</div>
+
+
+</body></html>

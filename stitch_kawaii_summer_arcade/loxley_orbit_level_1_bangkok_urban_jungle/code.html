@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Loxley Orbit - Level 1 - Bangkok Urban Jungle</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Be+Vietnam+Pro:wght@500&amp;family=Rubik:wght@700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed-dim": "#ffb3b5",
+                      "on-primary-container": "#fffbff",
+                      "outline": "#8f6f70",
+                      "primary": "#b71135",
+                      "outline-variant": "#e3bebe",
+                      "on-secondary": "#ffffff",
+                      "on-background": "#1c1c17",
+                      "surface-variant": "#e6e2d9",
+                      "error-container": "#ffdad6",
+                      "surface-bright": "#fdf9f0",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed-dim": "#73d1ff",
+                      "on-tertiary-container": "#4c3e00",
+                      "inverse-on-surface": "#f4f0e8",
+                      "surface-container-highest": "#e6e2d9",
+                      "on-secondary-fixed": "#001e2b",
+                      "inverse-primary": "#ffb3b5",
+                      "primary-container": "#da314b",
+                      "on-error-container": "#93000a",
+                      "secondary": "#006687",
+                      "on-tertiary": "#ffffff",
+                      "on-surface": "#1c1c17",
+                      "tertiary-fixed": "#ffe173",
+                      "primary-fixed": "#ffdada",
+                      "on-primary-fixed": "#40000b",
+                      "surface-container": "#f1eee5",
+                      "on-secondary-fixed-variant": "#004d66",
+                      "surface": "#fdf9f0",
+                      "on-surface-variant": "#5b4041",
+                      "tertiary-container": "#caa800",
+                      "surface-container-high": "#ece8df",
+                      "tertiary-fixed-dim": "#e8c426",
+                      "on-tertiary-fixed": "#221b00",
+                      "tertiary": "#705d00",
+                      "inverse-surface": "#31312b",
+                      "background": "#fdf9f0",
+                      "secondary-fixed": "#c1e8ff",
+                      "on-primary-fixed-variant": "#920025",
+                      "surface-dim": "#dddad1",
+                      "surface-container-low": "#f7f3ea",
+                      "on-tertiary-fixed-variant": "#554500",
+                      "surface-tint": "#ba1537",
+                      "on-secondary-container": "#005572",
+                      "surface-container-lowest": "#ffffff",
+                      "error": "#ba1a1a",
+                      "secondary-container": "#5fcdff",
+                      "on-error": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "safe-area": "32px",
+                      "gutter": "16px",
+                      "container-padding": "24px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "display-xl-mobile": ["Plus Jakarta Sans"],
+                      "body-lg": ["Be Vietnam Pro"],
+                      "display-xl": ["Plus Jakarta Sans"],
+                      "headline-sm": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "body-md": ["Be Vietnam Pro"],
+                      "label-bold": ["Rubik"]
+              },
+              "fontSize": {
+                      "display-xl-mobile": ["32px", {"lineHeight": "38px", "fontWeight": "800"}],
+                      "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                      "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "headline-sm": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "headline-md": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                      "display-lg": ["36px", {"lineHeight": "44px", "fontWeight": "800"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                      "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #73d1ff;
+            min-height: 100vh;
+            overflow: hidden; 
+        }
+
+        /* Tactile & Glossy Utilities */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 
+                0 8px 32px rgba(0, 102, 135, 0.15),
+                inset 0 4px 0 rgba(255, 255, 255, 0.7);
+        }
+
+        .glossy-btn {
+            position: relative;
+            background: #da314b;
+            border-bottom: 6px solid #920025;
+            transition: all 0.1s ease;
+        }
+        .glossy-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 30%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+            border-radius: 999px;
+        }
+        .glossy-btn:active {
+            transform: translateY(4px);
+            border-bottom-width: 2px;
+        }
+
+        /* Animations */
+        @keyframes scrollBg {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+        .animate-scroll { animation: scrollBg 20s linear infinite; }
+
+        @keyframes jetBlast {
+            0% { transform: scale(0.5) translateY(0); opacity: 1; }
+            50% { transform: scale(1.2) translateY(10px); opacity: 0.8; }
+            100% { transform: scale(0.2) translateY(30px); opacity: 0; }
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: jetBlast 0.5s ease-out forwards;
+        }
+
+        .obstacle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 60px;
+            background: repeating-linear-gradient(
+                45deg,
+                #333,
+                #333 10px,
+                #222 10px,
+                #222 20px
+            );
+            border: 2px solid #111;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            z-index: 5;
+        }
+        .obstacle-gap {
+            position: absolute;
+            width: 100%;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+<body class="text-on-background font-body-md select-none">
+<!-- Game Canvas -->
+<div class="fixed inset-0 z-0 overflow-hidden cursor-pointer" id="game-container">
+<!-- Scrolling Background -->
+<div class="absolute inset-0 flex w-[200%] h-full animate-scroll z-0">
+<div class="w-1/2 h-full bg-cover bg-bottom" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCP9fVE6m8HsNv_mPH4PrBJqh_wgm2yyFy5dktxIY_xuXZh4SMzY3bs0Tnr8SGO5VFqOIm4Pb9SJeifxdBLJGhFrXEGW5gxxai9uaDqx9n0jFbY2MzIq3fy9mix5OElojZDtH00qtHBpO5S4YT9q4AlouZNoSHXqQsN8hhcc3k4oFqqiKtcWHn1DZ4LA22j0Oe1Yt-D_hyqnrZ3IK5Lk5LMPQkggmmnjN6DqIfG539QwaKoGrjNb1kkgQ');"></div>
+<div class="w-1/2 h-full bg-cover bg-bottom" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCP9fVE6m8HsNv_mPH4PrBJqh_wgm2yyFy5dktxIY_xuXZh4SMzY3bs0Tnr8SGO5VFqOIm4Pb9SJeifxdBLJGhFrXEGW5gxxai9uaDqx9n0jFbY2MzIq3fy9mix5OElojZDtH00qtHBpO5S4YT9q4AlouZNoSHXqQsN8hhcc3k4oFqqiKtcWHn1DZ4LA22j0Oe1Yt-D_hyqnrZ3IK5Lk5LMPQkggmmnjN6DqIfG539QwaKoGrjNb1kkgQ');"></div>
+</div>
+<!-- Obstacles Layer -->
+<div class="absolute inset-0 z-10 pointer-events-none" id="obstacles-layer"></div>
+<!-- Player Character -->
+<div class="absolute left-1/4 top-1/2 z-20 w-24 h-24 -translate-y-1/2 -translate-x-1/2 will-change-transform" id="player">
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-4 h-4" id="jet-nozzle"></div>
+<img class="w-full h-full object-contain drop-shadow-2xl" data-alt="A 3D render of a cute, pink mascot character resembling a bunny or bear, wearing a sleek astronaut suit and a jetpack." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4c5ijRCsQA2h0Rc9x_QIk9P1Ka-vZCVwSZp6yNQsaTYNNgs8FcaGBSkSh6bZlBk3Pbqal0U_5j6eb-XGBlZ-Pc8o72eDWITbj0KQ4aiINCbgq9SSu8zl5wtxz7QG2dqKn1oKlbSg-w-cfEDPGRRhyAp0F171d0sMF9NvER-yrGD8WaWJbcutZqPPpCXhHSWMGM1U8sXwYFTYl_2CprPAhb4LOb6dK2DVfH8YavQDUPcwWOf2G1z5O3FeiRKFlg7yBONY"/>
+</div>
+</div>
+<!-- HUD Overlay z-30 -->
+<div class="relative z-30 h-full w-full max-w-7xl mx-auto px-safe pt-safe pointer-events-none">
+<div class="flex justify-between items-start pointer-events-auto">
+<!-- Left: Pause & Level Info -->
+<div class="flex items-center gap-unit">
+<button class="glossy-btn w-12 h-12 rounded-full flex items-center justify-center text-on-primary bg-secondary border-secondary-fixed shadow-md hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<div class="glass-panel rounded-xl px-4 py-2 flex flex-col justify-center shadow-md">
+<span class="font-label-bold text-label-bold text-secondary uppercase tracking-wider">Level 1</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Bangkok Urban Jungle</span>
+</div>
+</div>
+<!-- Right: Score & Stars -->
+<div class="flex flex-col items-end gap-unit">
+<div class="relative glass-panel rounded-xl px-6 py-2 flex items-center gap-2 shadow-md">
+<div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-surface-bright rounded-full border-2 border-outline-variant shadow-sm z-[-1]"></div>
+<div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-surface-bright rounded-full border-2 border-outline-variant shadow-sm z-[-1]"></div>
+<img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAob-22SGWxoH1ifMxbZlGk58you6qEGxHBRNeeg6fWW9nHjTiDycdAhpGa01jnPOiSWSfXUtKOaWUDBUo3FZfo0t3DlKI-wmPQiLWamq4S5pdLyKvNk3nCFAb5oFKFiFrWrIUPX4878FIrIJKjIjCGyPDE5Hc_shrupYaFJ-60ow-BjR4bxJOeGgYf-AOsfZltLHJR43Ya6uHvyJ5bDbiOCXKK4bZWF3y2T4Ar5nkQgVt-_MFHPQgWZSKejVU1YDyY87s"/>
+<span class="font-display-lg text-display-lg text-primary tracking-tight" id="score-display">1,240</span>
+</div>
+<div class="flex gap-1 mt-1">
+<span class="material-symbols-outlined text-tertiary-fixed text-3xl drop-shadow-md" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed text-3xl drop-shadow-md" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-surface-dim text-3xl drop-shadow-md" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<!-- Fuel Gauge -->
+<div class="absolute bottom-safe left-safe pointer-events-auto">
+<div class="relative w-24 h-24">
+<div class="absolute inset-0 rounded-full border-4 border-surface-container-high bg-surface-bright shadow-lg flex items-center justify-center">
+<div class="absolute inset-2 rounded-full border-8 border-primary-container" style="clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%); transform: rotate(45deg);"></div>
+<div class="absolute inset-0 flex flex-col items-center justify-center z-10">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">local_gas_station</span>
+<span class="font-label-bold text-label-bold text-on-surface mt-1">FUEL</span>
+</div>
+</div>
+<div class="absolute -top-2 -right-2 w-8 h-8 bg-surface-bright rounded-full border-2 border-primary-fixed-dim shadow-sm flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover scale-150 translate-y-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAP-Jd_IO9ZKHuZ1_BDYu9VpzwdKnc29lI4AnG8v9u7-BgcA-yjpMQRipdYjrrHDV_zuvpTf1iBCfIPG4Gvb_tMdoA_hEpXson7hoMPNJRyMtTKUQWjplRYszIs2TY5KRCLFsvlTw7ZvSGzDPX2dfDO1_YgKojHV7URdxa8G2yJLmoRYa_6OxkfeWOD9m3QLhbTd0Cs3L--t4tXrBOqjHTPkIDrdb4-vymWI0ype2AeyZJ61jj6wvMq3VITCOHhQvwrtm0"/>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="absolute bottom-safe right-safe flex gap-4 pointer-events-auto">
+<button class="glossy-btn w-16 h-16 rounded-full flex items-center justify-center text-on-primary shadow-xl hover:scale-105 transition-transform bg-secondary border-[#004d66]">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+</button>
+<button class="glossy-btn w-20 h-20 rounded-full flex items-center justify-center text-on-primary shadow-xl hover:scale-105 transition-transform text-5xl" id="jump-btn">
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">keyboard_double_arrow_up</span>
+</button>
+</div>
+</div>
+<!-- Game Logic -->
+<script>
+        const player = document.getElementById('player');
+        const gameContainer = document.getElementById('game-container');
+        const obstaclesLayer = document.getElementById('obstacles-layer');
+        const jumpBtn = document.getElementById('jump-btn');
+        const jetNozzle = document.getElementById('jet-nozzle');
+        
+        let playerY = window.innerHeight / 2;
+        let velocity = 0;
+        const gravity = 0.5;
+        const jumpStrength = -9;
+        let gameActive = true;
+        let frame = 0;
+
+        // Physics Loop
+        function gameLoop() {
+            if (!gameActive) return;
+
+            velocity += gravity;
+            playerY += velocity;
+
+            // Floor/Ceiling collision
+            if (playerY > window.innerHeight - 60) {
+                playerY = window.innerHeight - 60;
+                velocity = 0;
+            }
+            if (playerY < 60) {
+                playerY = 60;
+                velocity = 0;
+            }
+
+            // Apply rotation based on velocity for visual flair
+            const rotation = Math.min(Math.max(velocity * 3, -25), 45);
+            player.style.transform = `translateY(${playerY}px) rotate(${rotation}deg)`;
+
+            // Spawn obstacles
+            if (frame % 150 === 0) {
+                spawnObstacle();
+            }
+            moveObstacles();
+
+            frame++;
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Action
+        function jump() {
+            if (!gameActive) return;
+            velocity = jumpStrength;
+            createJetBlast();
+        }
+
+        function createJetBlast() {
+            const colors = ['bg-yellow-400', 'bg-orange-500', 'bg-red-600', 'bg-gray-300'];
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 15 + 10;
+                
+                particle.className = `particle ${color}`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${(Math.random() - 0.5) * 30}px`;
+                particle.style.top = `${(Math.random() * 10)}px`;
+                
+                jetNozzle.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 500);
+            }
+        }
+
+        // Obstacles (Temple Spires / Powerlines abstract)
+        const obstacles = [];
+        function spawnObstacle() {
+            const gapSize = 250;
+            const minHeight = 100;
+            const maxHeight = window.innerHeight - gapSize - minHeight;
+            const topHeight = Math.random() * (maxHeight - minHeight) + minHeight;
+
+            const obs = document.createElement('div');
+            obs.className = 'obstacle';
+            obs.style.left = `${window.innerWidth}px`;
+
+            const gap = document.createElement('div');
+            gap.className = 'obstacle-gap';
+            gap.style.top = `${topHeight}px`;
+            gap.style.height = `${gapSize}px`;
+
+            obs.appendChild(gap);
+            obstaclesLayer.appendChild(obs);
+            obstacles.push({ el: obs, x: window.innerWidth });
+        }
+
+        function moveObstacles() {
+            const speed = 4; // Normal speed 1x
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obs = obstacles[i];
+                obs.x -= speed;
+                obs.el.style.left = `${obs.x}px`;
+
+                if (obs.x < -100) {
+                    obs.el.remove();
+                    obstacles.splice(i, 1);
+                }
+            }
+        }
+
+        // Inputs
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'ArrowUp') {
+                e.preventDefault();
+                jump();
+            }
+        });
+        gameContainer.addEventListener('mousedown', jump);
+        gameContainer.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            jump();
+        });
+        jumpBtn.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
+            jump();
+        });
+        jumpBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            jump();
+        });
+
+        // Start
+        requestAnimationFrame(gameLoop);
+    </script>
+</body></html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Orbit Loxley - Asteroid Alley</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;family=Rubik:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#ffb3b5",
+                        "on-primary-container": "#fffbff",
+                        "outline": "#8f6f70",
+                        "primary": "#b71135",
+                        "outline-variant": "#e3bebe",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1c1c17",
+                        "surface-variant": "#e6e2d9",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#fdf9f0",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#73d1ff",
+                        "on-tertiary-container": "#4c3e00",
+                        "inverse-on-surface": "#f4f0e8",
+                        "surface-container-highest": "#e6e2d9",
+                        "on-secondary-fixed": "#001e2b",
+                        "inverse-primary": "#ffb3b5",
+                        "primary-container": "#da314b",
+                        "on-error-container": "#93000a",
+                        "secondary": "#006687",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#1c1c17",
+                        "tertiary-fixed": "#ffe173",
+                        "primary-fixed": "#ffdada",
+                        "on-primary-fixed": "#40000b",
+                        "surface-container": "#f1eee5",
+                        "on-secondary-fixed-variant": "#004d66",
+                        "surface": "#fdf9f0",
+                        "on-surface-variant": "#5b4041",
+                        "tertiary-container": "#caa800",
+                        "surface-container-high": "#ece8df",
+                        "tertiary-fixed-dim": "#e8c426",
+                        "on-tertiary-fixed": "#221b00",
+                        "tertiary": "#705d00",
+                        "inverse-surface": "#31312b",
+                        "background": "#fdf9f0",
+                        "secondary-fixed": "#c1e8ff",
+                        "on-primary-fixed-variant": "#920025",
+                        "surface-dim": "#dddad1",
+                        "surface-container-low": "#f7f3ea",
+                        "on-tertiary-fixed-variant": "#554500",
+                        "surface-tint": "#ba1537",
+                        "on-secondary-container": "#005572",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#5fcdff",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "safe-area": "32px",
+                        "gutter": "16px",
+                        "container-padding": "24px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "display-xl-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "display-xl": ["Plus Jakarta Sans"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-bold": ["Rubik"]
+                    },
+                    "fontSize": {
+                        "display-xl-mobile": ["32px", { "lineHeight": "38px", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "500" }],
+                        "display-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-sm": ["22px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "headline-md": ["28px", { "lineHeight": "34px", "fontWeight": "700" }],
+                        "display-lg": ["36px", { "lineHeight": "44px", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "label-bold": ["14px", { "lineHeight": "20px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            /* Dusk sky gradient */
+            background: linear-gradient(to bottom, #9b59b6, #e67e22, #f1c40f);
+            background-attachment: fixed;
+            overflow: hidden;
+            touch-action: none;
+        }
+        
+        .glossy-btn {
+            position: relative;
+            box-shadow: 0 6px 0 var(--tw-shadow-color);
+            transition: all 0.1s ease;
+        }
+        .glossy-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 var(--tw-shadow-color);
+        }
+        .glossy-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 30%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.6), transparent);
+            border-radius: 9999px;
+            pointer-events: none;
+        }
+        
+        .hud-panel {
+            background-color: rgba(253, 249, 240, 0.85); /* surface-bright with opacity */
+            backdrop-filter: blur(8px);
+            border: 4px solid var(--tw-colors-primary-container);
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.5), 0 8px 0 var(--tw-colors-primary);
+        }
+
+        /* Asteroid Animations */
+        @keyframes floatAsteroid {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+        @keyframes moveBackground {
+            from { background-position: 0 0; }
+            to { background-position: -1000px 1000px; }
+        }
+
+        .star-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background-image: radial-gradient(white 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 60s linear infinite;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        /* Jetpack flame */
+        @keyframes flicker {
+            0% { transform: scaleY(1); opacity: 0.8; }
+            50% { transform: scaleY(1.2); opacity: 1; }
+            100% { transform: scaleY(1); opacity: 0.8; }
+        }
+        .flame {
+            animation: flicker 0.1s infinite alternate;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-background h-screen w-screen relative">
+<div class="star-bg"></div>
+<!-- HUD - Top Area -->
+<header class="absolute top-0 left-0 w-full p-safe-area flex justify-between items-start z-40 pointer-events-none">
+<!-- Score & Level Info -->
+<div class="hud-panel rounded-xl p-unit flex items-center gap-unit pointer-events-auto">
+<div class="bg-tertiary-container text-on-tertiary-container rounded-full w-12 h-12 flex items-center justify-center font-display-xl-mobile shadow-[0_4px_0_#705d00]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex flex-col pr-unit">
+<span class="font-label-bold text-primary">SCORE</span>
+<span class="font-display-xl-mobile text-on-surface leading-none">14,250</span>
+</div>
+</div>
+<!-- Pause Button -->
+<button class="glossy-btn bg-surface-variant rounded-full w-14 h-14 flex items-center justify-center pointer-events-auto shadow-surface-dim">
+<span class="material-symbols-outlined text-primary text-3xl font-bold">pause</span>
+</button>
+</header>
+<!-- Game Canvas Area -->
+<main class="absolute inset-0 z-10 overflow-hidden" id="game-canvas">
+<!-- Environment Elements (Asteroids) -->
+<div class="absolute top-1/4 left-1/4" style="animation: floatAsteroid 8s ease-in-out infinite;">
+<div class="w-32 h-32 bg-surface-dim rounded-full shadow-[inset_-10px_-10px_0_rgba(0,0,0,0.2)] relative overflow-hidden">
+<div class="absolute top-4 left-4 w-8 h-8 bg-surface-container-highest rounded-full opacity-50"></div>
+<div class="absolute bottom-8 right-6 w-12 h-12 bg-surface-container-highest rounded-full opacity-50"></div>
+</div>
+</div>
+<div class="absolute bottom-1/3 right-1/4" style="animation: floatAsteroid 12s ease-in-out infinite reverse;">
+<div class="w-48 h-48 bg-surface-container-highest rounded-[40%] shadow-[inset_-15px_-15px_0_rgba(0,0,0,0.15)] relative">
+<div class="absolute top-10 left-10 w-10 h-10 bg-surface-dim rounded-full opacity-60"></div>
+</div>
+</div>
+<!-- Collectibles -->
+<div class="absolute top-1/2 left-2/3 transform -translate-x-1/2 -translate-y-1/2">
+<span class="material-symbols-outlined text-tertiary-fixed text-6xl drop-shadow-[0_0_15px_rgba(255,225,115,0.8)]" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<!-- Main Character (Loxley) -->
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30" id="player-character">
+<!-- Injecting provided image -->
+<img alt="Loxley in Jetpack" class="w-64 h-64 object-contain filter drop-shadow-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyefgdKWzIAuTR75_GNOu1GC7-Etl5UtGEd4PpL0iSbDp0XFFHPydyGZaIso_NrSEcGInvchtUIL8f9IEJg8_NIcQsy60RNsdiDxNwXxVGXTQqTTAh-CCGh-z8mmwyglBQ8ZUIe263r-NcnZt4O-KCq25u0D1vAwwjqI1LqAMCnXtiZoayDYmgp5RCioPNDnB49fd6i5MnD6v4X9GrYWZTyo_neDAxH8IgwHEetNYBVQpN5cQF4m_U8W83MoUFjMdUXuk"/>
+<!-- Simulated Jetpack Flame (if static image needs extra juice) -->
+<div class="absolute bottom-4 left-1/4 w-12 h-24 bg-gradient-to-t from-secondary-container to-transparent rounded-full flame opacity-60 mix-blend-screen blur-sm transform -rotate-15"></div>
+<div class="absolute bottom-8 left-1/3 w-8 h-16 bg-gradient-to-t from-surface-lowest to-transparent rounded-full flame mix-blend-screen blur-sm transform -rotate-15"></div>
+</div>
+</main>
+<!-- Controls - Bottom Area (Tablet/Landscape friendly) -->
+<footer class="absolute bottom-0 w-full p-safe-area flex justify-between items-end z-40 pointer-events-none md:px-32">
+<!-- Joystick/Movement (Left) -->
+<div class="w-32 h-32 rounded-full bg-surface-variant/50 backdrop-blur-sm border-4 border-surface-container shadow-inner flex items-center justify-center pointer-events-auto">
+<div class="w-16 h-16 rounded-full bg-primary-container shadow-[0_6px_0_var(--tw-colors-primary)] flex items-center justify-center glossy-btn relative">
+<div class="w-8 h-8 rounded-full bg-white/30 absolute top-2"></div>
+</div>
+</div>
+<!-- Action Buttons (Right) -->
+<div class="flex gap-gutter pointer-events-auto">
+<button class="w-20 h-20 rounded-full bg-secondary-container shadow-[0_8px_0_var(--tw-colors-secondary)] flex items-center justify-center glossy-btn">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl" style="font-variation-settings: 'FILL' 1;">shield</span>
+</button>
+<button class="w-24 h-24 rounded-full bg-primary-fixed-dim shadow-[0_8px_0_var(--tw-colors-primary)] flex items-center justify-center glossy-btn">
+<span class="material-symbols-outlined text-on-primary-fixed text-5xl" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+</button>
+</div>
+</footer>
+<!-- Level Intro Overlay (Fades out quickly) -->
+<div class="absolute inset-0 z-50 bg-background/90 flex flex-col items-center justify-center transition-opacity duration-1000 pointer-events-none" id="level-intro">
+<h2 class="font-display-xl text-primary drop-shadow-md text-center">Level 2</h2>
+<h1 class="font-display-xl-mobile text-on-surface-variant text-center mt-unit">Asteroid Alley</h1>
+<div class="mt-8 bg-surface-container-highest px-8 py-4 rounded-full border-4 border-outline-variant animate-pulse">
+<span class="font-headline-sm text-on-surface">Dodge the debris!</span>
+</div>
+</div>
+<script>
+        // Simple script to fade out the intro overlay
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const intro = document.getElementById('level-intro');
+                if(intro) {
+                    intro.style.opacity = '0';
+                    setTimeout(() => intro.remove(), 1000);
+                }
+            }, 2000);
+
+            // Basic interaction feel for the character (follows mouse slightly on desktop for flavor)
+            const player = document.getElementById('player-character');
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                player.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+            });
+        });
+    </script>
+</body></html>

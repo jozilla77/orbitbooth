@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Loxley Orbit - Similan Beach</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;family=Rubik:wght@700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed-dim": "#ffb3b5",
+                      "on-primary-container": "#fffbff",
+                      "outline": "#8f6f70",
+                      "primary": "#b71135",
+                      "outline-variant": "#e3bebe",
+                      "on-secondary": "#ffffff",
+                      "on-background": "#1c1c17",
+                      "surface-variant": "#e6e2d9",
+                      "error-container": "#ffdad6",
+                      "surface-bright": "#fdf9f0",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed-dim": "#73d1ff",
+                      "on-tertiary-container": "#4c3e00",
+                      "inverse-on-surface": "#f4f0e8",
+                      "surface-container-highest": "#e6e2d9",
+                      "on-secondary-fixed": "#001e2b",
+                      "inverse-primary": "#ffb3b5",
+                      "primary-container": "#da314b",
+                      "on-error-container": "#93000a",
+                      "secondary": "#006687",
+                      "on-tertiary": "#ffffff",
+                      "on-surface": "#1c1c17",
+                      "tertiary-fixed": "#ffe173",
+                      "primary-fixed": "#ffdada",
+                      "on-primary-fixed": "#40000b",
+                      "surface-container": "#f1eee5",
+                      "on-secondary-fixed-variant": "#004d66",
+                      "surface": "#fdf9f0",
+                      "on-surface-variant": "#5b4041",
+                      "tertiary-container": "#caa800",
+                      "surface-container-high": "#ece8df",
+                      "tertiary-fixed-dim": "#e8c426",
+                      "on-tertiary-fixed": "#221b00",
+                      "tertiary": "#705d00",
+                      "inverse-surface": "#31312b",
+                      "background": "#fdf9f0",
+                      "secondary-fixed": "#c1e8ff",
+                      "on-primary-fixed-variant": "#920025",
+                      "surface-dim": "#dddad1",
+                      "surface-container-low": "#f7f3ea",
+                      "on-tertiary-fixed-variant": "#554500",
+                      "surface-tint": "#ba1537",
+                      "on-secondary-container": "#005572",
+                      "surface-container-lowest": "#ffffff",
+                      "error": "#ba1a1a",
+                      "secondary-container": "#5fcdff",
+                      "on-error": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "safe-area": "32px",
+                      "gutter": "16px",
+                      "container-padding": "24px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "display-xl-mobile": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-lg": [
+                              "Be Vietnam Pro"
+                      ],
+                      "display-xl": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-sm": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-md": [
+                              "Be Vietnam Pro"
+                      ],
+                      "label-bold": [
+                              "Rubik"
+                      ]
+              },
+              "fontSize": {
+                      "display-xl-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "38px",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "26px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "headline-sm": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "36px",
+                              {
+                                      "lineHeight": "44px",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .glossy-button {
+            background: linear-gradient(180deg, theme('colors.primary') 0%, theme('colors.primary-fixed-dim') 100%);
+            box-shadow: 0 6px 0 theme('colors.on-primary-fixed-variant'), 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.1s ease;
+        }
+        .glossy-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 30%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+            border-radius: 9999px;
+        }
+        .glossy-button:active {
+            transform: translateY(6px);
+            box-shadow: 0 0px 0 theme('colors.on-primary-fixed-variant'), 0 2px 5px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .hud-panel {
+            background: linear-gradient(135deg, theme('colors.surface-container-highest') 0%, theme('colors.surface-variant') 100%);
+            border: 4px solid theme('colors.on-surface-variant');
+            box-shadow: inset 0 2px 10px rgba(255,255,255,0.5), 0 8px 0 theme('colors.on-surface-variant');
+            border-radius: theme('borderRadius.lg');
+            position: relative;
+        }
+        
+        .hud-panel::after {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 12px;
+            background: theme('colors.secondary-container');
+            border-radius: 6px 6px 0 0;
+            border: 4px solid theme('colors.on-surface-variant');
+            border-bottom: none;
+        }
+
+        .bubbly-bar-container {
+            background: theme('colors.surface-container-high');
+            border: 4px solid theme('colors.on-surface-variant');
+            border-radius: theme('borderRadius.full');
+            padding: 4px;
+            box-shadow: inset 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .bubbly-bar-fill {
+            background: linear-gradient(90deg, theme('colors.secondary') 0%, theme('colors.secondary-container') 100%);
+            border-radius: theme('borderRadius.full');
+            position: relative;
+            transition: width 0.3s ease;
+        }
+
+        .bubbly-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            height: 40%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 100%);
+            border-radius: theme('borderRadius.full');
+        }
+
+        .bg-scrolling {
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBPSUWoJxxRmfFnOMxLioVn_CfSz0geyjj0I35n6dt4MQJzKiCjm0dqkqKvWGnvONbSeeBrK09qmZbHvo5bbA1UJeK8aiyhuwXI_z0p_GJsgoJ8JkjE4OFMgkToXlqx2PHd2S0fs1u6mf05YSJDytTiud8-axGtFuMLCWabNJfU314YJCy_8ZsJHxIiA3ZKVTDLcJFv56bVxffnB6zmzcI4-TQvwH22osTLf2gFPLUlpWRmrD5Tb5eA1w');
+            background-size: cover;
+            background-position: center;
+            background-repeat: repeat-x;
+            animation: moveBackground 6.66s linear infinite; /* 3x faster than 20s */
+        }
+
+        @keyframes moveBackground {
+            from { background-position: 0 center; }
+            to { background-position: -100vw center; }
+        }
+
+        .supercharge-fill {
+            background: linear-gradient(90deg, theme('colors.tertiary') 0%, theme('colors.tertiary-container') 100%);
+        }
+
+        .obstacle-move {
+            animation: moveObstacle 1.33s linear infinite; /* 3x faster than 4s */
+        }
+
+        @keyframes moveObstacle {
+            from { right: -20%; }
+            to { right: 120%; }
+        }
+
+        .jump-animation {
+            animation: jump 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes jump {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-80px) rotate(-15deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen overflow-hidden flex flex-col">
+<!-- Top Navigation (Shell) -->
+<nav class="hidden md:flex justify-between items-center w-full px-safe py-gutter max-w-7xl mx-auto bg-background/80 backdrop-blur-md text-primary font-display-xl text-display-xl tracking-tight docked full-width top-0 border-b-4 border-surface-container-highest shadow-sm z-50">
+<div class="font-bold">Loxley Orbit</div>
+<div class="flex items-center gap-4">
+<button class="hover:scale-105 transition-transform text-on-surface-variant p-2 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+<button class="hover:scale-105 transition-transform text-on-surface-variant p-2 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+</div>
+</nav>
+<!-- Main Game Canvas -->
+<main class="flex-1 relative bg-scrolling overflow-hidden flex items-center justify-center cursor-pointer" id="game-canvas">
+<!-- HUD Layer -->
+<div class="absolute top-safe-area left-safe-area right-safe-area flex justify-between items-start z-20 pointer-events-none">
+<!-- Left HUD: Level & Score -->
+<div class="hud-panel p-4 flex flex-col gap-2 min-w-[180px]">
+<div class="flex items-center justify-between">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase">Lvl 3</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">Similan Beach</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-lowest p-2 rounded-lg border-2 border-surface-variant">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-display-lg text-display-lg font-extrabold text-on-surface tracking-tighter" id="score-display">14,250</span>
+</div>
+</div>
+<!-- Right HUD: Fuel & Supercharge -->
+<div class="hud-panel p-4 flex flex-col gap-4 min-w-[220px]">
+<!-- Fuel Bar -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center px-1">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase">Fuel</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1; font-size: 16px;">local_fire_department</span>
+</div>
+<div class="bubbly-bar-container h-6">
+<div class="bubbly-bar-fill h-full w-[75%] relative">
+<!-- Handle/Indicator -->
+<div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-secondary-container border-2 border-on-surface-variant rounded-full shadow-sm flex items-center justify-center">
+<div class="w-2 h-2 bg-white rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Super-Charge Bar -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center px-1">
+<span class="font-label-bold text-label-bold text-tertiary uppercase">Super-Charge</span>
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1; font-size: 16px;">bolt</span>
+</div>
+<div class="bubbly-bar-container h-8 border-tertiary-container bg-tertiary-fixed">
+<div class="bubbly-bar-fill supercharge-fill h-full w-[40%] relative">
+<!-- Glowing effect when charging -->
+<div class="absolute inset-0 bg-white opacity-20 animate-pulse rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Central Action Area -->
+<div class="relative w-full h-full max-w-4xl flex items-center justify-center perspective-1000">
+<!-- Obstacles -->
+<div class="absolute bottom-0 right-[-20%] w-32 h-64 bg-stone-500 rounded-t-full shadow-lg obstacle-move border-4 border-stone-700" style="background-image: radial-gradient(circle, #78716c 20%, transparent 20%); background-size: 20px 20px;"></div>
+<div class="absolute top-0 right-[-20%] w-24 h-48 bg-green-700 rounded-b-full shadow-lg obstacle-move border-4 border-green-900 delay-500" style="animation-delay: 0.66s; background-image: linear-gradient(45deg, #166534 25%, transparent 25%, transparent 75%, #166534 75%, #166534), linear-gradient(45deg, #166534 25%, transparent 25%, transparent 75%, #166534 75%, #166534); background-size: 20px 20px; background-position: 0 0, 10px 10px;"></div>
+<!-- Character -->
+<div class="relative z-10 transition-transform duration-200" id="character-container" style="transform: translateY(0px);">
+<img class="w-48 h-auto drop-shadow-2xl object-contain" data-alt="A 3D render of a cute, kawaii-style mascot character named Loxley wearing a futuristic pink spacesuit and jetpack, flying horizontally." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwdyYGBzl4LoEaqQytt1K30_XfKEmwKq3ZDNJuae1o--_4bjyD0hD2KO7XnWRszj7Zryjts25EB-3Vmkow0cqS2L-AaKBA6kK7mstQQy-OMluTO_Doam96GnM9fTWA_UMv0BkVPQ08UUYvNi_aTYVpwqWmyduxrot7HHvxfQb0lW7HRcUT4Cff6PVrvmBJD1VjY5lyp78bXn2-NS5zLC2f1Px_m4qvlQPWSuuqFtChVvrs2zb5WwLdNgH8Wv_WsXHLffQ"/>
+<!-- Thrust Effect -->
+<div class="absolute top-[60%] -left-16 w-24 h-12 bg-gradient-to-r from-transparent via-secondary-container to-white rounded-full blur-md opacity-0 transform -translate-y-1/2 scale-x-0 origin-right transition-all duration-200" id="jet-blast"></div>
+</div>
+</div>
+<!-- Bottom Controls (Mobile/Touch) -->
+<div class="absolute bottom-safe-area left-0 right-0 flex justify-center gap-8 z-20 px-gutter md:hidden pointer-events-none">
+<!-- Flappy bird mechanic usually uses anywhere on screen to tap, so specific buttons might not be needed, but keeping styling for visual consistency if requested -->
+<div class="bg-surface-container-highest/80 backdrop-blur px-6 py-3 rounded-full text-on-surface-variant font-label-bold flex items-center gap-2 pointer-events-auto">
+<span class="material-symbols-outlined">touch_app</span>
+    Tap anywhere to fly
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Shell - Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-end px-gutter pb-safe pt-unit bg-surface-container-lowest text-primary font-label-bold text-label-bold docked full-width rounded-t-lg border-t-4 border-surface-container-highest shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 opacity-70 hover:opacity-100 hover:scale-105">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">home</span>
+            Home
+        </button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-6 py-2 scale-110 -translate-y-2 shadow-md transition-all">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+            Mini Games
+        </button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 opacity-70 hover:opacity-100 hover:scale-105">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">leaderboard</span>
+            Leaderboard
+        </button>
+</nav>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('game-canvas');
+        const character = document.getElementById('character-container');
+        const jetBlast = document.getElementById('jet-blast');
+        let yPos = 0;
+        let velocity = 0;
+        const gravity = 0.8;
+        const jumpStrength = -12;
+        let isPlaying = true;
+
+        function updatePhysics() {
+            if (!isPlaying) return;
+            velocity += gravity;
+            yPos += velocity;
+            
+            // Basic boundaries
+            if (yPos > 200) yPos = 200; // Floor
+            if (yPos < -200) yPos = -200; // Ceiling
+            
+            character.style.transform = `translateY(${yPos}px) rotate(${velocity * 1.5}deg)`;
+            requestAnimationFrame(updatePhysics);
+        }
+
+        function jump() {
+            velocity = jumpStrength;
+            
+            // Jet blast animation
+            jetBlast.style.opacity = '0.9';
+            jetBlast.style.transform = 'translateY(-50%) scaleX(1.5)';
+            
+            setTimeout(() => {
+                jetBlast.style.opacity = '0';
+                jetBlast.style.transform = 'translateY(-50%) scaleX(0)';
+            }, 300);
+        }
+
+        canvas.addEventListener('click', jump);
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            jump();
+        });
+
+        // Start physics loop
+        updatePhysics();
+    });
+</script>
+</body></html>

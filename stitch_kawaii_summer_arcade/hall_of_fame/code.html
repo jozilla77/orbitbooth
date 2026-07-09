@@ -1,0 +1,374 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Orbit Loxley - Leaderboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;700&amp;family=Rubik:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "background": "#fdf9f0",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-background": "#1c1c17",
+                      "on-primary-fixed": "#40000b",
+                      "on-tertiary-container": "#4c3e00",
+                      "on-surface-variant": "#5b4041",
+                      "surface-container-low": "#f7f3ea",
+                      "surface-bright": "#fdf9f0",
+                      "inverse-primary": "#ffb3b5",
+                      "tertiary-fixed-dim": "#e8c426",
+                      "secondary": "#006687",
+                      "primary-fixed-dim": "#ffb3b5",
+                      "tertiary": "#705d00",
+                      "on-tertiary-fixed": "#221b00",
+                      "error-container": "#ffdad6",
+                      "on-secondary-container": "#005572",
+                      "tertiary-fixed": "#ffe173",
+                      "surface-container-highest": "#e6e2d9",
+                      "on-primary-fixed-variant": "#920025",
+                      "inverse-surface": "#31312b",
+                      "secondary-fixed": "#c1e8ff",
+                      "surface-container-high": "#ece8df",
+                      "outline-variant": "#e3bebe",
+                      "primary": "#b71135",
+                      "on-secondary-fixed-variant": "#004d66",
+                      "secondary-container": "#5fcdff",
+                      "on-secondary": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "primary-fixed": "#ffdada",
+                      "on-secondary-fixed": "#001e2b",
+                      "surface-variant": "#e6e2d9",
+                      "surface-tint": "#ba1537",
+                      "on-primary-container": "#fffbff",
+                      "tertiary-container": "#caa800",
+                      "outline": "#8f6f70",
+                      "error": "#ba1a1a",
+                      "secondary-fixed-dim": "#73d1ff",
+                      "surface-dim": "#dddad1",
+                      "surface-container": "#f1eee5",
+                      "on-surface": "#1c1c17",
+                      "on-tertiary-fixed-variant": "#554500",
+                      "on-tertiary": "#ffffff",
+                      "primary-container": "#da314b",
+                      "surface": "#fdf9f0",
+                      "inverse-on-surface": "#f4f0e8",
+                      "on-error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "safe-area": "32px",
+                      "gutter": "16px",
+                      "unit": "8px",
+                      "container-padding": "24px"
+              },
+              "fontFamily": {
+                      "display-xl": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-md": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display-xl-mobile": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-lg": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-sm": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-bold": [
+                              "Rubik"
+                      ],
+                      "display-lg": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "display-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-xl-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "38px",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "26px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-sm": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "36px",
+                              {
+                                      "lineHeight": "44px",
+                                      "fontWeight": "800"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        .tactile-btn {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tactile-btn:active {
+            transform: translateY(4px);
+        }
+        .tactile-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+        
+        .extruded-panel {
+            box-shadow: 0 8px 0 theme('colors.surface-variant');
+            margin-bottom: 8px;
+        }
+        
+        .glass-highlight {
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%);
+        }
+
+        .bg-pattern {
+            background-image: radial-gradient(theme('colors.primary-container') 1px, transparent 1px);
+            background-size: 16px 16px;
+            opacity: 0.05;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen overflow-x-hidden pb-24 md:pb-0">
+<!-- Sunset Meadow Background -->
+<div class="fixed inset-0 z-[-1] pointer-events-none">
+<div class="absolute inset-0 bg-gradient-to-b from-[#ff9a9e] via-[#fecfef] to-background opacity-50"></div>
+<div class="absolute inset-0 bg-pattern"></div>
+</div>
+<!-- TopAppBar -->
+<header class="hidden md:flex justify-between items-center w-full px-safe py-gutter max-w-7xl mx-auto bg-background/80 backdrop-blur-md shadow-sm border-b-4 border-surface-container-highest sticky top-0 z-40">
+<div class="font-display-lg text-display-lg tracking-tight text-primary">Loxley Orbit</div>
+<!-- Desktop Nav -->
+<nav class="flex items-center gap-6">
+<a class="text-on-surface-variant font-label-bold text-label-bold hover:scale-105 transition-transform flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+                Home
+            </a>
+<a class="text-on-surface-variant font-label-bold text-label-bold hover:scale-105 transition-transform flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">sports_esports</span>
+                Mini Games
+            </a>
+<a class="text-primary font-bold font-label-bold text-label-bold hover:scale-105 transition-transform flex flex-col items-center gap-1 translate-y-1 transition-all duration-100" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+                Leaderboard
+            </a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="tactile-btn bg-surface-container-lowest p-2 rounded-xl text-primary shadow-sm">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+<button class="tactile-btn bg-surface-container-lowest p-2 rounded-xl text-primary shadow-sm">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- Mobile Header (Simplified) -->
+<header class="md:hidden flex justify-between items-center px-gutter py-gutter sticky top-0 z-40 bg-background/80 backdrop-blur-md shadow-sm border-b-4 border-surface-container-highest">
+<div class="font-display-xl-mobile text-display-xl-mobile tracking-tight text-primary">Loxley Orbit</div>
+<div class="flex gap-2">
+<button class="tactile-btn bg-surface-container-lowest p-2 rounded-xl text-primary shadow-sm">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="max-w-4xl mx-auto px-gutter md:px-safe pt-8 md:pt-12">
+<!-- Header Section -->
+<div class="text-center mb-8 relative">
+<h1 class="font-display-xl-mobile md:font-display-xl text-display-xl-mobile md:text-display-xl text-primary drop-shadow-sm mb-2 relative inline-block">
+                Highest Scores
+                <span class="absolute -top-4 -right-8 text-4xl transform rotate-12">🏆</span>
+<span class="absolute -top-2 -left-6 text-3xl transform -rotate-12">✨</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg mx-auto">
+                The greatest champions in the meadow! Do you have what it takes to reach the top?
+            </p>
+</div>
+<!-- Scroll-like Panel -->
+<div class="bg-surface-container-lowest rounded-xl md:rounded-DEFAULT extruded-panel relative overflow-hidden border-4 border-surface-container-highest">
+<!-- Glass overlay for glossy feel -->
+<div class="absolute inset-0 glass-highlight pointer-events-none z-10"></div>
+<!-- Ornate Top Corners -->
+<div class="absolute top-0 left-0 w-16 h-16 bg-primary-container rounded-br-full -translate-x-8 -translate-y-8 z-20"></div>
+<div class="absolute top-0 right-0 w-16 h-16 bg-primary-container rounded-bl-full translate-x-8 -translate-y-8 z-20"></div>
+<div class="p-4 md:p-container-padding relative z-20">
+<!-- Tabs -->
+<div class="flex overflow-x-auto pb-4 mb-6 gap-3 snap-x hide-scrollbar" style="scrollbar-width: none;">
+<button class="snap-start flex-shrink-0 tactile-btn bg-primary text-on-primary font-label-bold text-label-bold px-6 py-3 rounded-lg shadow-[0_4px_0_theme('colors.on-primary-fixed-variant')] hover:scale-105 transition-transform flex items-center gap-2">
+<span class="text-xl">⭐</span>
+                        Hall of Fame
+                    </button>
+<button class="snap-start flex-shrink-0 tactile-btn bg-surface text-on-surface font-label-bold text-label-bold px-6 py-3 rounded-lg border-2 border-surface-variant shadow-[0_4px_0_theme('colors.surface-variant')] hover:scale-105 transition-transform flex items-center gap-2">
+<span class="text-xl">☁️</span>
+                        Sky Jump
+                    </button>
+<button class="snap-start flex-shrink-0 tactile-btn bg-surface text-on-surface font-label-bold text-label-bold px-6 py-3 rounded-lg border-2 border-surface-variant shadow-[0_4px_0_theme('colors.surface-variant')] hover:scale-105 transition-transform flex items-center gap-2">
+<span class="text-xl">🍓</span>
+                        Berry Blast
+                    </button>
+<button class="snap-start flex-shrink-0 tactile-btn bg-surface text-on-surface font-label-bold text-label-bold px-6 py-3 rounded-lg border-2 border-surface-variant shadow-[0_4px_0_theme('colors.surface-variant')] hover:scale-105 transition-transform flex items-center gap-2">
+<span class="text-xl">🌊</span>
+                        River Race
+                    </button>
+</div>
+<!-- Top 3 Podium (Bento-style layout for top players) -->
+<div class="grid grid-cols-3 gap-2 md:gap-4 mb-8 items-end">
+<!-- Rank 2 -->
+<div class="bg-surface-container-low rounded-lg p-3 text-center border-2 border-surface-variant relative transform hover:-translate-y-1 transition-transform order-2 md:order-1 h-[80%] flex flex-col justify-end">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-surface-container-lowest rounded-full p-1 shadow-sm border-2 border-[#C0C0C0]">
+<span class="material-symbols-outlined text-[#C0C0C0] text-3xl" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<img class="w-12 h-12 md:w-16 md:h-16 mx-auto rounded-full mb-2 bg-secondary-container" data-alt="A highly detailed 3D rendering of a cute, glossy blue squirrel mascot character with big eyes, stylized in a kawaii mobile game aesthetic. The background is isolated white. Lighting is soft and bright." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDJBEYhONs-e2Y5irVR6wQQGeyA73W40hVGI5jRf7VVssr7N-8AUC0vXH1BjVGIBbGmsOf6fo46zEQ4kB5zZ6DJBgrbApdX_Fz4Mwk_-_Upiyl6cMQT-tTpTN6lCFeCmpIEdVzEPnkGKksvIel0YsnNVn12F2Gjsl0AgAR-0fpM59rA5BRNsDOvca5jjIS3ldIop7KdS2xRh8kE-ygIhpP7ya0BQ_RiDsXBzV0Zschkt_lkxGUduRbMA">
+<div class="font-headline-sm text-headline-sm text-on-surface truncate">Pip</div>
+<div class="font-label-bold text-label-bold text-secondary">9,240 pts</div>
+</div>
+<!-- Rank 1 -->
+<div class="bg-primary-container rounded-t-lg rounded-b-xl p-4 text-center border-4 border-primary relative transform -translate-y-4 hover:-translate-y-5 transition-transform order-1 md:order-2 shadow-lg h-full flex flex-col justify-end z-10">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-container-lowest rounded-full p-1 shadow-md border-2 border-[#FFD700]">
+<span class="material-symbols-outlined text-[#FFD700] text-4xl" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<img class="w-16 h-16 md:w-20 md:h-20 mx-auto rounded-full mb-2 bg-surface-container-lowest border-2 border-white" data-alt="A highly detailed 3D rendering of a cute, glossy pink bunny mascot character wearing a tiny golden crown, stylized in a kawaii mobile game aesthetic. The background is isolated white. Lighting is vibrant and high-key." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvKj9WnL9uVRWuul226imIzzPbMT-uAdjVMafU9aq33KrfbZspO9tK_pF-JP0Rbgcdkwk3GhTnFXQjnXP0S-xM9e7fe0TJfeqTrnQAdPoKwrk26E5biiI2pyoVSQi8By5zHqIX68YhN9OfNxgplaxzYMbSnJIvvdoADMYHmfZuWDcsr3cStGXVkDwOl0sTgVFQEVM11gpdOJHMCsOAYFUPwrv8LowRbmqUWRKI67uN6lR5hLT1fu5s2Q">
+<div class="font-headline-md text-headline-md text-on-primary-container truncate">Luna ✨</div>
+<div class="font-display-xl-mobile text-display-xl-mobile text-primary font-bold">12,500</div>
+</div>
+<!-- Rank 3 -->
+<div class="bg-surface-container-low rounded-lg p-3 text-center border-2 border-surface-variant relative transform hover:-translate-y-1 transition-transform order-3 h-[70%] flex flex-col justify-end">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-surface-container-lowest rounded-full p-1 shadow-sm border-2 border-[#CD7F32]">
+<span class="material-symbols-outlined text-[#CD7F32] text-3xl" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<img class="w-12 h-12 md:w-16 md:h-16 mx-auto rounded-full mb-2 bg-tertiary-container" data-alt="A highly detailed 3D rendering of a cute, glossy green turtle mascot character wearing small goggles, stylized in a kawaii mobile game aesthetic. The background is isolated white. Lighting is soft and cheerful." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGjD81oqINHrK9HQqJ0gqtedFs3D3PnsmK1vgG1tPS7aDD88o0fIo6ab5JnqRI2zjB_9QNhOc3k7lrSWMThH6COIeDuHhXBJP6wULi5jrHNAOc5VtSZW0s0rkNJz5edz8lmb6bEhp1ewfOYuJK-CHXneHLA-j8BYSw5KsNflClL75C4PdPIpk_wamK2iUBhvqscCchL9_DSpBQZPHIcBCYx9scTSJkp0MhDmDhrxSzAL3JHAu-FFvvzw">
+<div class="font-headline-sm text-headline-sm text-on-surface truncate">Barnaby</div>
+<div class="font-label-bold text-label-bold text-tertiary">8,900 pts</div>
+</div>
+</div>
+<!-- List Ranking -->
+<div class="space-y-3">
+<!-- Rank 4 -->
+<div class="flex items-center bg-surface-container hover:bg-surface-container-high transition-colors p-3 rounded-lg border-2 border-transparent hover:border-surface-variant cursor-pointer group">
+<div class="font-headline-md text-headline-md text-on-surface-variant w-10 text-center opacity-70">4</div>
+<img class="w-10 h-10 rounded-full mx-3 bg-tertiary-fixed" data-alt="A highly detailed 3D rendering of a cute, fluffy yellow duckling mascot character, stylized in a kawaii mobile game aesthetic. The background is isolated white." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCW2dMQvaxrtDk2d6ygPGOdFLRXLkxOVgMNHrz0xYSbN7OpBv8GjSfkDVGEiNu-Ea_JDkrduAL6wroTDIDo6Y0LSCoBkG8_CG-9gbGDyfv2xL_s8AdK1eVqLMQDu0ipXteAeTyCzOMuejqoSfz5qGwhhuHrTYw0VStF6MxF5qLhDg31t1hiR771MC2ghWC6vpK_kWMw4VemvmRVKEiyoUNrnXd5e-SPIs6UwfjCZarLfan8bA5DUQTLmg">
+<div class="flex-grow">
+<div class="font-body-lg text-body-lg text-on-surface font-bold group-hover:text-primary transition-colors">Quackers</div>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface-variant">8,120</div>
+</div>
+<!-- Rank 5 -->
+<div class="flex items-center bg-surface-container hover:bg-surface-container-high transition-colors p-3 rounded-lg border-2 border-transparent hover:border-surface-variant cursor-pointer group">
+<div class="font-headline-md text-headline-md text-on-surface-variant w-10 text-center opacity-70">5</div>
+<div class="w-10 h-10 rounded-full mx-3 bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed font-bold">M</div>
+<div class="flex-grow">
+<div class="font-body-lg text-body-lg text-on-surface font-bold group-hover:text-primary transition-colors">Milo</div>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface-variant">7,850</div>
+</div>
+<!-- Rank 6 -->
+<div class="flex items-center bg-surface-container hover:bg-surface-container-high transition-colors p-3 rounded-lg border-2 border-transparent hover:border-surface-variant cursor-pointer group">
+<div class="font-headline-md text-headline-md text-on-surface-variant w-10 text-center opacity-70">6</div>
+<img class="w-10 h-10 rounded-full mx-3 bg-orange-200" data-alt="A highly detailed 3D rendering of a cute, sleepy brown bear cub mascot character, stylized in a kawaii mobile game aesthetic. The background is isolated white." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjbEod_g60K_JNTtw7H8K3K1DMuRsI2flQsZVwv6G5j9tgQyVIEc2-ADNKXCXN8cqNhMtxghmQThoLQHXxqcnhguQ_2Xcf-uyr_9q5Swb-82PyM7RdD4ygLIMQW4uUvn33xN0ZZb0U3y-iyw0X18CJwSdvxh0pYFdskCHb0nMmdpkTg0vl0oXULGtiFy5wsYXoYPy94x7vlUx-4FhyBJGDFTIzO-_rHftUft7XU8CmXCyA40T0jkiytg">
+<div class="flex-grow">
+<div class="font-body-lg text-body-lg text-on-surface font-bold group-hover:text-primary transition-colors">BearHug</div>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface-variant">7,200</div>
+</div>
+</div>
+<!-- Current User Rank Sticky Footer (inside panel) -->
+<div class="mt-6 pt-4 border-t-2 border-surface-variant border-dashed">
+<div class="flex items-center bg-inverse-surface text-inverse-on-surface p-4 rounded-lg shadow-md transform hover:scale-[1.02] transition-transform tactile-btn">
+<div class="font-headline-md text-headline-md w-10 text-center text-primary-fixed-dim">42</div>
+<div class="w-10 h-10 rounded-full mx-3 bg-surface-container-lowest flex items-center justify-center text-primary font-bold">You</div>
+<div class="flex-grow">
+<div class="font-body-lg text-body-lg font-bold">Your Score</div>
+</div>
+<div class="font-headline-sm text-headline-sm text-primary-fixed">2,450</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-end px-gutter pb-safe pt-unit bg-surface-container-lowest border-t-4 border-surface-container-highest shadow-[0_-4px_10px_rgba(0,0,0,0.05)] rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 opacity-70 hover:opacity-100 hover:scale-105 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-label-bold text-label-bold mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 opacity-70 hover:opacity-100 hover:scale-105 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">sports_esports</span>
+<span class="font-label-bold text-label-bold mt-1">Mini Games</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-6 py-2 scale-110 -translate-y-2 shadow-md transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-label-bold text-label-bold mt-1">Leaderboard</span>
+</a>
+</nav>
+
+
+</body></html>
