@@ -5,7 +5,7 @@ class LevelManager extends ChangeNotifier {
   int _score = 0;
   int _highScore = 0;
   int _level = 1;
-  double _currentSpeed = 15.0; // Base speed
+  double _currentSpeed = 250.0; // Base speed in pixels per second
 
   int get score => _score;
   int get highScore => _highScore;
@@ -30,7 +30,15 @@ class LevelManager extends ChangeNotifier {
   void reset() {
     _score = 0;
     _level = 1;
-    _currentSpeed = 15.0;
+    _currentSpeed = 250.0;
+    notifyListeners();
+  }
+
+  void notifyUI() {
+    notifyListeners();
+  }
+
+  void triggerGameOver() {
     notifyListeners();
   }
 
@@ -40,10 +48,10 @@ class LevelManager extends ChangeNotifier {
     // Check level progression
     if (_score == 10 && _level == 1) {
       _level = 2;
-      _currentSpeed = 30.0; // 2x faster
+      _currentSpeed = 300.0; // Faster
     } else if (_score == 25 && _level == 2) {
       _level = 3;
-      _currentSpeed = 40.0; // Hardest speed
+      _currentSpeed = 350.0; // Hardest speed
     }
 
     if (_score > _highScore) {

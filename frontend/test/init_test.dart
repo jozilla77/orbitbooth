@@ -1,0 +1,1 @@
+import 'package:flutter_test/flutter_test.dart'; import 'package:frontend/game/orbit_game.dart'; import 'package:frontend/main.dart'; void main() { testWidgets('App init', (WidgetTester tester) async { await tester.pumpWidget(const OrbitGameApp()); print('App pumped successfully'); }); }

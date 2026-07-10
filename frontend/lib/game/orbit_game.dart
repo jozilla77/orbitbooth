@@ -1,22 +1,31 @@
 import 'package:flame/components.dart';
+import 'package:flame/game.dart';
+import 'package:flame/camera.dart';
+import 'package:flame/collisions.dart';
 import 'package:flutter/painting.dart';
+import 'dart:ui';
 import 'package:flame/events.dart';
 import 'package:flame/parallax.dart';
-import 'package:flame_forge2d/flame_forge2d.dart';
 import 'player.dart';
 import 'obstacle_manager.dart';
 import 'level_manager.dart';
 
-enum GameState { mainMenu, playing, gameOver }
+enum GameState { mainMenu, ready, playing, gameOver }
 
-class OrbitGame extends Forge2DGame with TapCallbacks {
-  OrbitGame() : super(gravity: Vector2(0, 80.0)); // Increased gravity for a snappier feel
-
+class OrbitGame extends FlameGame with HasCollisionDetection, TapCallbacks {
+  final LevelManager levelManager = LevelManager();
+  final ObstacleManager obstacleManager = ObstacleManager();
   late Player player;
-  late ObstacleManager obstacleManager;
-  late LevelManager levelManager;
   late Ground ground;
   late ScrollingBackground background;
+
+  OrbitGame() : super(
+    camera: CameraComponent.withFixedResolution(width: 800, height: 600)
+  );
+
+  // Physics constants (pixels per second)
+  final double gravity = 1200.0;
+  final double jumpStrength = -400.0;
 
   GameState gameState = GameState.mainMenu;
 
@@ -26,9 +35,7 @@ class OrbitGame extends Forge2DGame with TapCallbacks {
   Future<void> onLoad() async {
     await super.onLoad();
     
-    levelManager = LevelManager();
-    obstacleManager = ObstacleManager();
-    add(obstacleManager);
+    world.add(obstacleManager);
 
     // Add scrolling background
     background = ScrollingBackground();
@@ -36,32 +43,35 @@ class OrbitGame extends Forge2DGame with TapCallbacks {
 
     // Add the ground
     ground = Ground();
-    add(ground);
+    world.add(ground);
     
     // Initialize player but don't add to world until playing
-    player = Player(Vector2(camera.visibleWorldRect.width / 4, camera.visibleWorldRect.height / 2));
+    player = Player(Vector2(200, 300));
   }
 
   void startGame() {
-    gameState = GameState.playing;
+    gameState = GameState.ready;
     levelManager.reset();
     obstacleManager.reset();
     
     if (player.parent == null) {
-      add(player);
+      world.add(player);
     }
-    player.reset(Vector2(camera.visibleWorldRect.width / 4, camera.visibleWorldRect.height / 2));
+    player.resetPlayer(Vector2(200, 300));
   }
 
   void gameOver() {
     gameState = GameState.gameOver;
-    // We will handle UI updates and leaderboard submission in main.dart 
-    // by listening to the game state or level manager.
+    levelManager.triggerGameOver();
   }
 
   @override
   void onTapDown(TapDownEvent event) {
-    if (gameState == GameState.playing) {
+    if (gameState == GameState.ready) {
+      gameState = GameState.playing;
+      levelManager.notifyUI(); // Force UI update to hide "TAP TO JUMP"
+      player.flap();
+    } else if (gameState == GameState.playing) {
       player.flap();
     }
   }
@@ -71,19 +81,24 @@ class ScrollingBackground extends ParallaxComponent<OrbitGame> {
   int _currentLevel = 1;
 
   @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    // Background fills the 800x600 logical space
+    this.size = Vector2(800, 600);
+  }
+
+  @override
   Future<void> onLoad() async {
     await _loadParallaxForLevel(1);
   }
 
   Future<void> _loadParallaxForLevel(int level) async {
-    // Determine which image to use based on level
-    // Assuming the user saves the city image as bg_city.png and temple as bg_temple.png
     String imagePath = level >= 3 ? 'bg_temple.png' : 'bg_city.png';
     
     try {
       parallax = await game.loadParallax(
         [ParallaxImageData(imagePath)],
-        baseVelocity: Vector2(game.currentSpeed, 0),
+        baseVelocity: Vector2(game.currentSpeed * 0.5, 0),
         repeat: ImageRepeat.repeat,
         fill: LayerFill.height,
       );
@@ -96,37 +111,35 @@ class ScrollingBackground extends ParallaxComponent<OrbitGame> {
   void update(double dt) {
     super.update(dt);
     
-    if (game.gameState == GameState.playing) {
-      // Check if level changed and update background image
+    if (game.gameState == GameState.playing || game.gameState == GameState.ready) {
       if (_currentLevel != game.levelManager.level) {
         _currentLevel = game.levelManager.level;
         _loadParallaxForLevel(_currentLevel);
       }
-      
-      parallax?.baseVelocity = Vector2(game.currentSpeed * 2, 0); // Background moves slightly faster relative to Forge2d space depending on desired effect
+      parallax?.baseVelocity = Vector2(game.currentSpeed * 0.5, 0); 
     } else {
       parallax?.baseVelocity = Vector2.zero();
     }
   }
 }
 
-class Ground extends BodyComponent<OrbitGame> {
+class Ground extends PositionComponent with HasGameRef<OrbitGame> {
+  Ground() : super(
+    position: Vector2(400, 590), // Center of ground at bottom
+    size: Vector2(800, 20),
+    anchor: Anchor.center,
+  );
+
   @override
-  Body createBody() {
-    final shape = PolygonShape()
-      ..setAsBoxXY(game.camera.visibleWorldRect.width * 2, 2.0);
+  Future<void> onLoad() async {
+    await super.onLoad();
+    add(RectangleHitbox());
+  }
 
-    final fixtureDef = FixtureDef(
-      shape, 
-      friction: 0.3,
-      userData: this,
-    );
-
-    final bodyDef = BodyDef(
-      position: Vector2(0, game.camera.visibleWorldRect.height - 2),
-      type: BodyType.static,
-    );
-
-    return world.createBody(bodyDef)..createFixture(fixtureDef);
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    final paint = Paint()..color = const Color(0xFF8B4513);
+    canvas.drawRect(size.toRect(), paint);
   }
 }

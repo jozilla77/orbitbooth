@@ -1,79 +1,85 @@
 import 'package:flame/components.dart';
-import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flame/collisions.dart';
+import 'package:flutter/painting.dart';
+import 'dart:ui';
 import 'dart:math';
 import 'orbit_game.dart';
 
-class Pipe extends BodyComponent<OrbitGame> {
-  final Vector2 position;
-  final Vector2 size;
+class Pipe extends PositionComponent with HasGameRef<OrbitGame> {
   final bool isTop;
 
-  Pipe({required this.position, required this.size, required this.isTop});
+  Pipe({required Vector2 position, required Vector2 size, required this.isTop}) : super(
+    position: position,
+    size: size,
+    anchor: Anchor.center,
+  );
 
   @override
-  Body createBody() {
-    final shape = PolygonShape()
-      ..setAsBoxXY(size.x / 2, size.y / 2);
+  Future<void> onLoad() async {
+    await super.onLoad();
+    add(RectangleHitbox());
+  }
 
-    final fixtureDef = FixtureDef(
-      shape,
-      userData: this, // Used for collision
-    );
-
-    final bodyDef = BodyDef(
-      position: position,
-      type: BodyType.kinematic,
-    );
-
-    return world.createBody(bodyDef)..createFixture(fixtureDef);
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    final rect = size.toRect();
+    final paint = Paint()
+      ..color = const Color(0xFF2ECC71) // Base green
+      ..style = PaintingStyle.fill;
+    canvas.drawRect(rect, paint);
+    
+    // Draw pipe borders
+    final borderPaint = Paint()
+      ..color = const Color(0xFF27AE60)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4.0;
+    canvas.drawRect(rect, borderPaint);
+    
+    // Draw pipe cap (top or bottom depending on isTop)
+    final capRect = isTop 
+        ? Rect.fromLTWH(-5, size.y - 30, size.x + 10, 30)
+        : Rect.fromLTWH(-5, 0, size.x + 10, 30);
+    canvas.drawRect(capRect, paint);
+    canvas.drawRect(capRect, borderPaint);
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    // Move left based on game speed
-    body.linearVelocity = Vector2(-game.currentSpeed, 0);
-
-    // Remove if off screen
-    if (body.position.x < -20) {
-      removeFromParent();
+    if (gameRef.gameState == GameState.playing) {
+      position.x -= gameRef.currentSpeed * dt;
+      if (position.x + size.x < 0) {
+        removeFromParent();
+      }
     }
   }
 }
 
-class ScoreSensor extends BodyComponent<OrbitGame> {
-  final Vector2 position;
-  final Vector2 size;
+class ScoreSensor extends PositionComponent with HasGameRef<OrbitGame>, CollisionCallbacks {
   bool scored = false;
 
-  ScoreSensor({required this.position, required this.size});
+  ScoreSensor({required Vector2 position, required Vector2 size}) : super(
+    position: position,
+    size: size,
+    anchor: Anchor.center,
+  );
 
   @override
-  Body createBody() {
-    final shape = PolygonShape()
-      ..setAsBoxXY(size.x / 2, size.y / 2);
-
-    final fixtureDef = FixtureDef(
-      shape,
-      isSensor: true, // Only detects overlap, no physical response
-      userData: this,
-    );
-
-    final bodyDef = BodyDef(
-      position: position,
-      type: BodyType.kinematic,
-    );
-
-    return world.createBody(bodyDef)..createFixture(fixtureDef);
+  Future<void> onLoad() async {
+    await super.onLoad();
+    // isSolid = false so it doesn't resolve collisions physically, just triggers callback
+    add(RectangleHitbox()..isSolid = false);
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    body.linearVelocity = Vector2(-game.currentSpeed, 0);
-
-    if (body.position.x < -20) {
-      removeFromParent();
+    if (gameRef.gameState == GameState.playing) {
+      position.x -= gameRef.currentSpeed * dt;
+      if (position.x + size.x < 0) {
+        removeFromParent();
+      }
     }
   }
 }
@@ -97,8 +103,8 @@ class ObstacleManager extends Component with HasGameReference<OrbitGame> {
 
     spawnTimer += dt;
     
-    // Spawn rate scales with game speed
-    double spawnInterval = 30.0 / game.currentSpeed;
+    // Spawn rate scales with game speed (e.g. spawn every 350 pixels)
+    double spawnInterval = 350.0 / game.currentSpeed; 
     
     if (spawnTimer >= spawnInterval) {
       spawnTimer = 0;
@@ -107,24 +113,25 @@ class ObstacleManager extends Component with HasGameReference<OrbitGame> {
   }
 
   void _spawnObstacle() {
-    // Screen height is roughly 100 units in Forge2D space based on our camera setup
-    final screenHeight = game.camera.visibleWorldRect.height;
-    final screenWidth = game.camera.visibleWorldRect.width;
+    // Screen is fixed at 800x600 in pixels
+    final screenHeight = 600.0;
+    final screenWidth = 800.0;
     
-    final spawnX = screenWidth / 2 + 10;
+    // Spawn just offscreen to the right
+    final spawnX = screenWidth + 50;
     
     // Gap size gets smaller as level increases
-    double gapSize = 30.0;
-    if (game.levelManager.level == 2) gapSize = 25.0;
-    if (game.levelManager.level == 3) gapSize = 20.0;
+    double gapSize = 250.0;
+    if (game.levelManager.level == 2) gapSize = 200.0;
+    if (game.levelManager.level == 3) gapSize = 150.0;
 
     // Randomize the y position of the gap
-    double minY = 20.0;
-    double maxY = screenHeight - 20.0 - gapSize;
+    double minY = 100.0;
+    double maxY = screenHeight - 100.0 - gapSize;
     double gapTopY = minY + _random.nextDouble() * (maxY - minY);
     double gapBottomY = gapTopY + gapSize;
 
-    final pipeWidth = 10.0;
+    final pipeWidth = 80.0;
 
     // Top Pipe
     final topPipeHeight = gapTopY;
@@ -137,7 +144,7 @@ class ObstacleManager extends Component with HasGameReference<OrbitGame> {
     // Bottom Pipe
     final bottomPipeHeight = screenHeight - gapBottomY;
     game.world.add(Pipe(
-      position: Vector2(spawnX, screenHeight - bottomPipeHeight / 2),
+      position: Vector2(spawnX, gapBottomY + bottomPipeHeight / 2),
       size: Vector2(pipeWidth, bottomPipeHeight),
       isTop: false,
     ));

@@ -49,12 +49,7 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     game = OrbitGame();
-    
-    // Add listener to rebuild UI when level manager updates (score changes)
-    // We defer this until after build
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      game.levelManager.addListener(_onLevelManagerUpdate);
-    });
+    game.levelManager.addListener(_onLevelManagerUpdate);
 
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       setState(() {
@@ -62,6 +57,12 @@ class _GameScreenState extends State<GameScreen> {
       });
     });
     _googleSignIn.signInSilently();
+  }
+
+  @override
+  void dispose() {
+    game.levelManager.removeListener(_onLevelManagerUpdate);
+    super.dispose();
   }
 
   void _onLevelManagerUpdate() {
@@ -190,7 +191,9 @@ class _GameScreenState extends State<GameScreen> {
       body: Stack(
         children: [
           // The Game layer
-          GameWidget(game: game),
+          Positioned.fill(
+            child: GameWidget(game: game),
+          ),
 
           // Main Menu Overlay
           if (game.gameState == GameState.mainMenu)
@@ -233,7 +236,7 @@ class _GameScreenState extends State<GameScreen> {
             ),
 
           // HUD Overlay
-          if (game.gameState == GameState.playing)
+          if (game.gameState == GameState.playing || game.gameState == GameState.ready)
             Positioned(
               top: 20,
               left: 20,
@@ -241,16 +244,26 @@ class _GameScreenState extends State<GameScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Score
+                  // Score & High Score
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.black54,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text(
-                      'Score: ${game.levelManager.score}',
-                      style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Score: ${game.levelManager.score}',
+                          style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'High: ${game.levelManager.highScore}',
+                          style: const TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
                   // Level Indicator
@@ -270,15 +283,23 @@ class _GameScreenState extends State<GameScreen> {
                 ],
               ),
             ),
+
+          // Ready State Overlay
+          if (game.gameState == GameState.ready)
+            const Center(
+              child: Text(
+                'TAP TO JUMP', 
+                style: TextStyle(
+                  fontSize: 48, 
+                  fontWeight: FontWeight.bold, 
+                  color: Colors.white,
+                  shadows: [Shadow(color: Colors.black, blurRadius: 10)]
+                )
+              ),
+            ),
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    game.levelManager.removeListener(_onLevelManagerUpdate);
-    super.dispose();
   }
 }
 
