@@ -35,6 +35,9 @@ class OrbitGame extends FlameGame with HasCollisionDetection, TapCallbacks {
   Future<void> onLoad() async {
     await super.onLoad();
     
+    // Set the world origin (0,0) to the top-left of the viewport
+    camera.viewfinder.anchor = Anchor.topLeft;
+    
     world.add(obstacleManager);
 
     // Add scrolling background
