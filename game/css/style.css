@@ -220,6 +220,8 @@ body{
 .board-list li.me{ background:linear-gradient(180deg,#fff3d6,#ffe9b8); border-color:var(--gold); }
 .board-list li.top1 .rank{ color:var(--gold-deep); }
 .board-empty{ display:block !important; text-align:center !important; opacity:.6; }
+.board-note{ display:block !important; text-align:center !important; font-size:13px; font-weight:700;
+  color:var(--gold-deep); background:#fff3d6 !important; border-color:#ffe0a3 !important; }
 
 /* ---------- HUD ---------- */
 #hud{

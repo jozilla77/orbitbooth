@@ -17,3 +17,6 @@ frontend/.flutter-plugins-dependencies
 backend/public/
 backend/main
 backend/main.exe
+
+# App Engine orbitjump service: static payload is copied from game/ at deploy time
+deploy/orbitjump/public/

@@ -1,0 +1,8 @@
+# Routes /orbitjump traffic (on every domain, including the custom domain and
+# the appspot host) to the "orbitjump" service. Everything else keeps going to
+# whatever it went to before (your existing default service is untouched).
+dispatch:
+  - url: "*/orbitjump"
+    service: orbitjump
+  - url: "*/orbitjump/*"
+    service: orbitjump

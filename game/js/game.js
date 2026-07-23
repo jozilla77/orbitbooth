@@ -1001,45 +1001,52 @@ function showBanner(idx){
   bannerTimer = setTimeout(()=>{ b.classList.add('hidden'); }, idx===0?1400:1200);
 }
 
-// ----- Leaderboard -----
+// ----- Leaderboard (online-first, shared across every deployment) -----
 const GAME_ID = 'orbit_jump';
+// One canonical backend so scores sync everywhere the game is hosted.
+// A host can override by setting window.ORBIT_API_BASE before this script loads.
+const API_BASE = (window.ORBIT_API_BASE || 'https://jozilla.loxleyorbit.com/orbitjump').replace(/\/+$/,'');
+
 function localBoard(){ try { return JSON.parse(localStorage.getItem('orbit_board')||'[]'); } catch(e){ return []; } }
-function saveLocal(entry){
+function cacheLocal(entry){ // offline safety net only — the server is the source of truth
   const b = localBoard(); b.push(entry);
-  b.sort((a,z)=>z.score-a.score); const top = b.slice(0,50);
-  localStorage.setItem('orbit_board', JSON.stringify(top));
-  return top;
+  b.sort((a,z)=>z.score-a.score);
+  localStorage.setItem('orbit_board', JSON.stringify(b.slice(0,50)));
 }
 async function submitScore(name, score){
-  const entry = { name, score, ts: Date.now(), mine:true };
-  saveLocal(entry);
   try {
-    const r = await fetch('/api/score', {
+    const r = await fetch(API_BASE+'/api/score', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ playerName:name, score, gameName:GAME_ID })
     });
-    return r.ok ? 'server' : 'local';
-  } catch(e){ return 'local'; }
+    if (r.ok){ cacheLocal({ name, score, ts:Date.now(), mine:true }); return 'server'; }
+    return 'error';
+  } catch(e){
+    cacheLocal({ name, score, ts:Date.now(), mine:true });
+    return 'offline';
+  }
 }
 async function loadBoard(){
   const list = $('#boardList');
   list.innerHTML = '<li class="board-empty">Loading…</li>';
-  let rows = null, source='local';
+  let rows = null, offline = false;
   try {
-    const r = await fetch('/api/leaderboard?gameName='+GAME_ID, {cache:'no-store'});
-    if (r.ok){ const j = await r.json(); if (Array.isArray(j.leaderboard)){ rows = j.leaderboard.map(s=>({name:s.playerName, score:s.score})); source='server'; } }
+    const r = await fetch(API_BASE+'/api/leaderboard?gameName='+GAME_ID, {cache:'no-store'});
+    if (r.ok){ const j = await r.json(); if (Array.isArray(j.leaderboard)) rows = j.leaderboard.map(s=>({name:s.playerName, score:s.score})); }
   } catch(e){}
-  if (!rows) rows = localBoard().map(e=>({name:e.name, score:e.score, mine:e.mine}));
+  if (!rows){ offline = true; rows = localBoard().map(e=>({name:e.name, score:e.score, mine:true})); }
   rows.sort((a,z)=>z.score-a.score);
   rows = rows.slice(0,10);
   const myName = localStorage.getItem('orbit_name');
   if (!rows.length){ list.innerHTML = '<li class="board-empty">No scores yet — be the first! 🌸</li>'; return; }
-  list.innerHTML = rows.map((r,i)=>{
-    const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
-    const me = (r.mine || (source==='server' && r.name===myName)) ? ' me':'';
-    const top = i===0?' top1':'';
-    return `<li class="${top}${me}"><span class="rank">${medal}</span><span class="who">${escapeHtml(r.name)}</span><span class="pts">${r.score}</span></li>`;
-  }).join('');
+  list.innerHTML =
+    (offline ? '<li class="board-note">⚠️ Offline — showing scores saved on this device</li>' : '') +
+    rows.map((r,i)=>{
+      const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
+      const me = (r.name===myName) ? ' me':'';
+      const top = (!offline && i===0)?' top1':'';
+      return `<li class="${top}${me}"><span class="rank">${medal}</span><span class="who">${escapeHtml(r.name)}</span><span class="pts">${r.score}</span></li>`;
+    }).join('');
 }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
@@ -1068,9 +1075,16 @@ $('#saveScoreBtn').addEventListener('click', async ()=>{
   $('#saveScoreBtn').disabled = true;
   $('#saveStatus').textContent = 'Saving…'; $('#saveStatus').className='save-status';
   const res = await submitScore(name, game.score);
-  $('#saveStatus').textContent = res==='server' ? '✓ Saved to leaderboard!' : '✓ Saved on this device';
-  $('#saveStatus').className = 'save-status ok';
-  $('#nameEntry').style.opacity = '.6';
+  if (res==='server'){
+    $('#saveStatus').textContent = '✓ Saved to the global leaderboard!';
+    $('#saveStatus').className = 'save-status ok';
+    $('#nameEntry').style.opacity = '.6';
+  } else {
+    $('#saveStatus').textContent = res==='offline'
+      ? '⚠️ Offline — saved here, tap Save to retry' : '⚠️ Couldn’t save — tap Save to retry';
+    $('#saveStatus').className = 'save-status warn';
+    $('#saveScoreBtn').disabled = false;
+  }
 });
 $('#nameInput')?.addEventListener('keydown', e=>{ if (e.key==='Enter') $('#saveScoreBtn').click(); });
 

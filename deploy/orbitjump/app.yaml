@@ -1,0 +1,30 @@
+runtime: go122
+service: orbitjump
+env: standard
+
+# Go app root package (handles /orbitjump/api/*)
+main: ./
+
+# Scale to zero when idle
+automatic_scaling:
+  min_instances: 0
+  max_instances: 10
+  target_cpu_utilization: 0.65
+
+handlers:
+  # API -> Go application (leaderboard read/write against Firestore)
+  - url: /orbitjump/api/.*
+    script: auto
+    secure: always
+
+  # Static game assets (served by the App Engine frontend, no instance needed)
+  - url: /orbitjump/(.*\.(js|html|css|png|jpg|jpeg|gif|svg|json|ico|wasm|woff2?))$
+    static_files: public/\1
+    upload: public/.*\.(js|html|css|png|jpg|jpeg|gif|svg|json|ico|wasm|woff2?)$
+    secure: always
+
+  # /orbitjump and /orbitjump/ -> the game
+  - url: /orbitjump/?
+    static_files: public/index.html
+    upload: public/index.html
+    secure: always
