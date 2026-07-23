@@ -1,0 +1,275 @@
+:root{
+  --pink:#ff9ec4; --pink-deep:#ff6fa5; --pink-ink:#c93f77;
+  --sky:#8fd3ff; --mint:#8ff0d0; --gold:#ffd166; --gold-deep:#f4a93b;
+  --ink:#4a3b52; --cream:#fff7fb; --panel:#fffdfe;
+  --shadow:0 12px 30px rgba(120,60,110,.28);
+  --font:'Baloo 2',system-ui,-apple-system,sans-serif;
+  --display:'Mochiy Pop One','Baloo 2',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--font); color:var(--ink);
+  background:#0b0f1a; overflow:hidden;
+  -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+#stage{
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+#game{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+.hidden{ display:none !important; }
+
+/* ---------- Overlays ---------- */
+.overlay{
+  position:absolute; inset:0; z-index:20;
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+  animation:fade .28s ease both;
+}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+.panel{
+  width:min(92vw,420px);
+  background:linear-gradient(180deg,#ffffff, var(--panel));
+  border:4px solid #fff;
+  outline:4px solid rgba(255,140,190,.35);
+  border-radius:30px;
+  box-shadow:var(--shadow);
+  padding:26px 24px 24px;
+  text-align:center;
+  animation:pop .38s cubic-bezier(.2,1.3,.4,1) both;
+}
+@keyframes pop{from{transform:scale(.82);opacity:0}to{transform:scale(1);opacity:1}}
+
+.menu-panel{ padding-top:14px; }
+
+/* ---------- Menu ---------- */
+.hero{ position:relative; height:150px; margin:2px auto 4px; }
+.hero img{
+  height:100%; object-fit:contain;
+  filter:drop-shadow(0 12px 14px rgba(200,90,150,.35));
+  animation:bob 3.2s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+.sparkle{ position:absolute; color:var(--gold); font-size:22px; animation:tw 2.4s ease-in-out infinite; text-shadow:0 0 8px rgba(255,209,102,.8);}
+.sparkle.s1{top:8%; left:14%;}
+.sparkle.s2{top:24%; right:12%; font-size:28px; animation-delay:.5s;}
+.sparkle.s3{bottom:8%; left:24%; font-size:18px; animation-delay:1s;}
+@keyframes tw{0%,100%{opacity:.3;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+
+/* ---- Colorful Japanese arcade logo ---- */
+.logo{
+  position:relative; display:inline-flex; flex-direction:column; align-items:center;
+  gap:.06em;
+  font-family:'Mochiy Pop One',var(--display); line-height:1;
+  font-size:clamp(44px,13.5vw,66px); letter-spacing:1px;
+  transform:rotate(-3deg); margin:14px 0 8px; padding:6px 4px 16px;
+}
+.logo .word{ display:flex; }
+.logo .word2{ font-size:.9em; margin-top:.02em; }
+.logo i{
+  display:inline-block; font-style:normal; position:relative;
+  -webkit-text-stroke:8px #fff; paint-order:stroke fill;
+  text-shadow:0 6px 0 rgba(150,55,100,.5), 0 10px 12px rgba(90,30,60,.32);
+  animation:letterPop 3s ease-in-out infinite;
+}
+/* candy rainbow per letter */
+.logo i:nth-child(6n+1){ color:#ff5b9e; }
+.logo i:nth-child(6n+2){ color:#ff8f43; }
+.logo i:nth-child(6n+3){ color:#ffd23e; }
+.logo i:nth-child(6n+4){ color:#3fd08a; }
+.logo i:nth-child(6n+5){ color:#3fb6ff; }
+.logo i:nth-child(6n+6){ color:#a86bff; }
+.logo .word2 i:nth-child(4n+1){ color:#3fb6ff; }
+.logo .word2 i:nth-child(4n+2){ color:#a86bff; }
+.logo .word2 i:nth-child(4n+3){ color:#ff5b9e; }
+.logo .word2 i:nth-child(4n+4){ color:#ffd23e; }
+.logo i:nth-child(odd){ transform:rotate(-4deg); }
+.logo i:nth-child(even){ transform:rotate(4deg); }
+.logo i:nth-child(2){ animation-delay:.1s } .logo i:nth-child(3){ animation-delay:.2s }
+.logo i:nth-child(4){ animation-delay:.3s } .logo i:nth-child(5){ animation-delay:.4s }
+@keyframes letterPop{ 0%,100%{ translate:0 0 } 50%{ translate:0 -5px } }
+.subtitle{
+  font-family:'Mochiy Pop One',var(--display); font-weight:400;
+  margin-top:8px; font-size:15px; letter-spacing:3px;
+  color:transparent;
+  background:linear-gradient(90deg,#ff6fa5,#f4a93b,#28b487,#5aa1ff,#c94bff);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  text-shadow:none;
+}
+.best-line{ margin:8px 0 14px; color:var(--ink); font-weight:600; opacity:.8;}
+.best-line b{ color:var(--pink-ink); }
+.credit{ margin-top:14px; font-size:13px; opacity:.6; font-weight:600; }
+
+/* ---------- Buttons ---------- */
+.btn{
+  font-family:var(--font); font-weight:800; font-size:20px;
+  border:none; border-radius:18px; cursor:pointer;
+  padding:14px 22px; color:#fff;
+  transition:transform .08s ease, filter .15s ease;
+  box-shadow:0 6px 0 rgba(0,0,0,.12), 0 8px 16px rgba(0,0,0,.14);
+}
+.btn:active{ transform:translateY(3px); box-shadow:0 3px 0 rgba(0,0,0,.12); }
+.btn-primary{
+  background:linear-gradient(180deg,var(--pink),var(--pink-deep));
+  box-shadow:0 6px 0 var(--pink-ink), 0 10px 20px rgba(201,63,119,.4);
+  width:100%; letter-spacing:1px;
+}
+.btn-primary:active{ box-shadow:0 3px 0 var(--pink-ink); }
+.btn-ghost{
+  background:linear-gradient(180deg,#fff,#fdeff6);
+  color:var(--pink-ink); font-size:17px; padding:12px 16px;
+  box-shadow:0 5px 0 #ffd0e4, 0 8px 14px rgba(201,63,119,.2);
+  flex:1;
+}
+.btn-ghost:active{ box-shadow:0 2px 0 #ffd0e4; }
+.menu-row{ display:flex; gap:10px; margin-top:12px; }
+
+/* ---------- How to play ---------- */
+.panel-title{
+  font-family:'Mochiy Pop One',var(--display); color:#ff6fa5;
+  font-size:clamp(26px,7.5vw,32px); margin-bottom:20px; letter-spacing:.5px;
+  -webkit-text-stroke:5px #fff; paint-order:stroke fill;
+  text-shadow:0 4px 0 #d64f86, 0 7px 10px rgba(120,40,90,.28);
+  transform:rotate(-2deg);
+}
+/* stylish arcade Game Over title */
+#goTitle{
+  font-family:'Mochiy Pop One',var(--display);
+  font-size:clamp(38px,11vw,50px); line-height:1;
+  color:#ff5b9e; -webkit-text-stroke:7px #fff; paint-order:stroke fill;
+  text-shadow:0 5px 0 #c93f77, 0 8px 0 #a12f61, 0 12px 14px rgba(120,40,90,.35);
+  transform:rotate(-2.5deg);
+  letter-spacing:1px; margin:6px 0 20px;
+  animation:goPop .5s cubic-bezier(.2,1.4,.4,1) both;
+}
+@keyframes goPop{ 0%{transform:rotate(-2.5deg) scale(.6);opacity:0} 100%{transform:rotate(-2.5deg) scale(1);opacity:1} }
+.how-list{ text-align:left; list-style:none; display:grid; gap:12px; margin-bottom:20px; }
+.how-list li{
+  background:#fff5fa; border-radius:14px; padding:12px 14px;
+  font-weight:600; font-size:15px; border:2px solid #ffe1ee;
+}
+.how-list b{ color:var(--pink-ink); }
+
+/* ---------- Round banner ---------- */
+.banner{ background:transparent; pointer-events:none; }
+.banner-card{
+  text-align:center; animation:bannerIn .5s cubic-bezier(.2,1.3,.4,1) both;
+}
+.banner-kicker{
+  font-family:var(--display); font-size:20px; color:#fff;
+  letter-spacing:4px; text-shadow:0 3px 10px rgba(0,0,0,.4);
+}
+.banner-title{
+  font-family:var(--display); font-size:clamp(44px,13vw,72px); color:#fff;
+  -webkit-text-stroke:3px var(--pink-ink);
+  text-shadow:0 6px 0 var(--pink-ink), 0 12px 24px rgba(0,0,0,.4);
+  line-height:1;
+}
+.banner-sub{
+  font-weight:800; font-size:22px; color:#fff; margin-top:4px;
+  text-shadow:0 3px 10px rgba(0,0,0,.5);
+}
+@keyframes bannerIn{
+  0%{transform:scale(.5) rotate(-8deg);opacity:0}
+  60%{transform:scale(1.08) rotate(2deg);opacity:1}
+  100%{transform:scale(1) rotate(0)}
+}
+
+/* ---------- Game over ---------- */
+.score-grid{ display:flex; gap:12px; margin-bottom:14px; }
+.score-cell{
+  flex:1; background:#fff5fa; border:2px solid #ffe1ee; border-radius:16px;
+  padding:12px 8px; display:flex; flex-direction:column; gap:2px;
+}
+.score-cell span{ font-size:13px; font-weight:700; opacity:.6; }
+.score-cell b{ font-size:32px; color:var(--pink-ink); font-family:var(--display); }
+.newbest{ color:var(--gold-deep); font-weight:800; margin-bottom:12px; animation:tw 1s ease-in-out infinite; }
+
+#nameEntry{ margin-bottom:16px; }
+.name-label{ display:block; font-size:13px; font-weight:700; opacity:.7; margin-bottom:8px; }
+.name-row{ display:flex; gap:8px; }
+#nameInput{
+  flex:1; font-family:var(--font); font-weight:700; font-size:18px;
+  padding:12px 14px; border:3px solid #ffd0e4; border-radius:14px;
+  outline:none; color:var(--ink); background:#fff; min-width:0;
+}
+#nameInput:focus{ border-color:var(--pink-deep); }
+.btn-save{ width:auto; padding:12px 20px; }
+.save-status{ font-size:13px; font-weight:700; margin-top:8px; min-height:18px; }
+.save-status.ok{ color:#28b487; }
+.save-status.warn{ color:var(--gold-deep); }
+.go-actions{ display:grid; gap:10px; }
+.go-actions .btn-ghost{ flex:none; }
+.go-actions .menu-row{ margin:0; }
+
+/* ---------- Leaderboard ---------- */
+.board-list{ list-style:none; display:grid; gap:8px; margin-bottom:18px; max-height:46vh; overflow-y:auto; }
+.board-list li{
+  display:grid; grid-template-columns:34px 1fr auto; align-items:center; gap:10px;
+  background:#fff5fa; border:2px solid #ffe1ee; border-radius:14px;
+  padding:10px 14px; font-weight:700; text-align:left;
+}
+.board-list li .rank{ font-family:var(--display); color:var(--pink-deep); text-align:center; }
+.board-list li .who{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.board-list li .pts{ color:var(--pink-ink); font-family:var(--display); }
+.board-list li.me{ background:linear-gradient(180deg,#fff3d6,#ffe9b8); border-color:var(--gold); }
+.board-list li.top1 .rank{ color:var(--gold-deep); }
+.board-empty{ display:block !important; text-align:center !important; opacity:.6; }
+
+/* ---------- HUD ---------- */
+#hud{
+  position:absolute; top:0; left:0; right:0; z-index:15;
+  display:flex; align-items:flex-start; justify-content:space-between;
+  padding:16px; gap:10px; pointer-events:none;
+}
+.hud-pill{
+  background:rgba(255,255,255,.86); backdrop-filter:blur(6px);
+  border:3px solid #fff; border-radius:18px;
+  padding:8px 16px; box-shadow:var(--shadow);
+  display:flex; flex-direction:column; align-items:center; line-height:1;
+}
+.hud-label{ font-size:11px; font-weight:800; letter-spacing:2px; color:var(--pink-deep); }
+.hud-value{ font-family:var(--display); font-size:26px; color:var(--ink); }
+.hud-sub{ font-size:15px; opacity:.5; }
+.hud-round{ position:relative; }
+.round-progress{ width:70px; height:7px; background:#ffe1ee; border-radius:6px; margin-top:6px; overflow:hidden; }
+.round-progress i{ display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--gold),var(--gold-deep)); border-radius:6px; transition:width .2s ease; }
+.icon-btn{
+  pointer-events:auto; width:46px; height:46px; border-radius:16px; border:3px solid #fff;
+  background:rgba(255,255,255,.86); font-size:20px; cursor:pointer;
+  box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center;
+}
+
+/* ---------- Ready hint ---------- */
+.ready-hint{
+  position:absolute; left:50%; top:60%; transform:translate(-50%,-50%);
+  z-index:16; pointer-events:none;
+  font-family:'Mochiy Pop One',var(--font); font-size:24px; color:#fff;
+  background:rgba(255,111,165,.92); padding:12px 26px; border-radius:22px;
+  border:4px solid #fff; box-shadow:var(--shadow);
+  display:flex; align-items:center; gap:8px; white-space:nowrap;
+  animation:hintBob 1.1s ease-in-out infinite;
+}
+.ready-hint span{ text-shadow:0 2px 0 #c93f77; }
+@keyframes hintBob{ 0%,100%{ transform:translate(-50%,-50%) scale(1) } 50%{ transform:translate(-50%,-58%) scale(1.05) } }
+
+/* ---------- Loading ---------- */
+#loading{ background:linear-gradient(180deg,#bfe8ff,#ffd7ec); z-index:40; }
+.loader{ text-align:center; color:var(--pink-ink); font-weight:800; }
+.loader-ring{
+  width:56px; height:56px; margin:0 auto 16px;
+  border:6px solid #ffffff; border-top-color:var(--pink-deep);
+  border-radius:50%; animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media (max-height:560px){
+  .hero{ height:96px; }
+  .title{ font-size:32px; }
+  .panel{ padding:18px 18px 16px; }
+}

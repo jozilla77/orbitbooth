@@ -1,76 +1,88 @@
-# Orbit Booth Game
+# Orbit Jump
 
-This repository contains the Flutter Web frontend and the Go backend for the Orbit Booth Game, designed to be deployed to GCP App Engine Standard.
+A cute, kawaii **flappy-style arcade game** starring the Orbit mascot, flying through three
+themed rounds inspired by Thailand. Built as a self-contained HTML5 Canvas game with a Go
+backend for the shared leaderboard.
 
-## Project Structure
+> **Note:** This repo also contains an earlier **Flutter/Flame** prototype under `frontend/`.
+> It is kept for reference but is **not** the active game — building it requires the Flutter SDK.
+> The playable game is the plain **HTML5 Canvas** version under `game/`, which needs no build
+> step and runs in any modern browser.
 
+## The Game — `game/`
+
+- **8 distinct stages**, each with its own art, obstacles, wildlife and difficulty:
+  1. 🏮 **Bangkok** — Urban Jungle (temple chedi columns, city, jungle)
+  2. 🏝️ **Phuket** — Island Beaches (palm columns, turquoise sea, sand)
+  3. ⛰️ **Chiang Mai** — Misty Mountains (stone pagoda columns)
+  4. 🐬 **Koh Samui** — Dolphin Bay (coral columns; dolphins, fish, birds)
+  5. 🐘 **Buriram** — Ancient Kingdom (Khmer prang columns; elephants)
+  6. 🐒 **Krabi** — Limestone Sea (karst rock columns; monkeys)
+  7. 🌸 **Chiang Rai** — Flower Highlands (white-temple columns; flower fields, deer)
+  8. 🤖 **Neo Bangkok** — Year 3000 finale (neon tech columns; flying cars, robots,
+     flying trains) — **endless at 2× speed**, the loop point once you reach the end.
+  - Advance a stage every 10 gaps passed; stage 8 continues endlessly so scores keep climbing.
+- **The real Orbit character** (`game/assets/orbit_sprite.png`, the 3-pose idle/flap/glide
+  sheet) — flap/idle/glide frames are chosen from the bird's velocity.
+- **High-score leaderboard** with **name entry** on Game Over. Scores save to
+  `localStorage` and, when the Go backend is running, `POST` to `/api/score` and read from
+  `/api/leaderboard` (game id `orbit_jump`). Falls back to local scores if the API is offline.
+- Colorful Japanese-arcade logo, kawaii clouds, parallax scenery, particles, and synthesized
+  WebAudio sound effects (mute toggle). High-DPI ("4K") crisp rendering.
+
+**Controls:** Tap / click / `Space` / `↑` to flap.
+
+### Structure
 ```
-/
-├── backend/            # Go REST API backend and App Engine config
-│   ├── app.yaml        # App Engine Standard config (scale-to-zero)
-│   ├── go.mod
-│   ├── handlers/       # API Handlers (e.g., leaderboard)
-│   ├── main.go         # Go server entrypoint
-│   └── models/         # Data models
-└── frontend/           # Flutter Web project using Flame
-    ├── lib/            # Flutter / Flame code
-    ├── pubspec.yaml    # Flutter dependencies
-    └── web/            # Web entry point (configured for CanvasKit and Base Href /games1/)
+game/
+├── index.html      # markup + overlay UI (menu, name entry, leaderboard, game over)
+├── css/style.css   # kawaii pastel styling + arcade logo/title treatments
+├── js/game.js      # the whole game engine (physics, rounds, themes, sound, leaderboard)
+└── assets/
+    ├── orbit_sprite.png   # 384×128 sheet: idle | flap | glide (128×128 each)
+    └── orbit_hero.png     # hi-res 3D mascot used on the menu
 ```
 
 ## Running Locally
 
-### 1. Backend (Go)
+You need **Go** installed (used as a tiny static server; `serve.go` is at the repo root).
 
-You must have Go installed.
+```bash
+go run serve.go        # serves the repo on http://localhost:8000 (honors $PORT)
+```
+Then open **http://localhost:8000/game/**. (The leaderboard uses local storage in this mode.)
 
-1. Open a terminal and navigate to the `backend` directory:
-   ```bash
-   cd backend
-   ```
-2. Start the server:
-   ```bash
-   go run main.go
-   ```
-   The backend will start and listen on `http://localhost:8080`.
+Append `?dev` to the URL to enable dev keys: `1`/`2`/`3` jump to a round, `g` toggles a
+hover/no-death mode for inspecting themes.
 
-### 2. Frontend (Flutter Web)
+### With the full backend (shared leaderboard)
 
-You must have Flutter installed. 
+The Go backend in `backend/` (Gin) exposes `GET /api/leaderboard` and `POST /api/score`
+and serves static files from `backend/public/`.
 
-1. Open a new terminal and navigate to the `frontend` directory:
-   ```bash
-   cd frontend
-   ```
-2. Fetch dependencies:
-   ```bash
-   flutter pub get
-   ```
-3. Run the Flutter app for web:
-   ```bash
-   flutter run -d chrome
-   ```
-   Note: The base href in `web/index.html` is set to `/games1/` for deployment. When running locally via `flutter run`, Flutter handles local routing dynamically, but if you build for web and test via a local static server, you will need to serve it from a `/games1/` path or proxy it.
+```bash
+cd backend
+go run main.go         # http://localhost:8080  (API under /api, static under /public)
+```
+Copy the game into the served directory, then open http://localhost:8080/game/:
+```bash
+# from repo root
+cp -r game backend/public/game          # macOS/Linux
+# Copy-Item -Recurse -Force game backend\public\game   # PowerShell
+```
 
-## Deployment to GCP App Engine
+## Deployment (GCP App Engine)
 
-1. Build the Flutter Web App using CanvasKit:
-   ```bash
-   cd frontend
-   flutter build web --web-renderer canvaskit --base-href /games1/
-   ```
-2. Copy the build output to the backend's `public` directory:
-   ```bash
-   # On Windows (PowerShell)
-   Copy-Item -Path "build\web\*" -Destination "..\backend\public" -Recurse -Force
-   
-   # On Mac/Linux
-   # cp -r build/web/* ../backend/public/
-   ```
-3. Deploy the backend (which now includes the static frontend files) to App Engine:
-   ```bash
-   cd ../backend
-   gcloud app deploy app.yaml --project loxleyorbit-dev-jozilla
-   ```
+The backend already serves everything from `backend/public/`, so deployment is just:
 
-The app will be accessible at `https://jozilla.loxleyorbit.com/games1/`.
+```bash
+# 1. Put the game where the backend serves it
+cp -r game backend/public/game          # (or copy game/* to backend/public/ to serve at root)
+
+# 2. Deploy the Go backend (includes the static game + leaderboard API)
+cd backend
+gcloud app deploy app.yaml --project loxleyorbit-dev-jozilla
+```
+
+If you serve the game at a sub-path (e.g. `/games1/`), keep the game's asset paths relative
+(they already are) and ensure the leaderboard API is reachable at `/api/*` from that origin.
