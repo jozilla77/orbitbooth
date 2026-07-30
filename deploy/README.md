@@ -99,6 +99,7 @@ script loads:
 - **Scores are client-reported.** The API validates types and caps values, but this
   is a fun leaderboard, not an anti-cheat system. Harden later with auth/tokens if needed.
 - **Firestore location is permanent** for a database — choose the right region in step 4.
-- If deploy fails on the Go version, bump `runtime: go122` in
-  `deploy/orbitjump/app.yaml` to `go123` (both are supported App Engine Standard runtimes).
+- The service targets the `go126` App Engine Standard runtime (`runtime: go126` in
+  `deploy/orbitjump/app.yaml`, `go 1.26` in `go.mod`). If your project can't use it yet,
+  lower both to a supported version (e.g. `go124`/`go123`) and redeploy.
 - Health check: `curl https://jozilla.loxleyorbit.com/orbitjump/api/health` → `{"ok":true}`.

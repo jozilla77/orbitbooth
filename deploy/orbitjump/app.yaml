@@ -1,4 +1,4 @@
-runtime: go122
+runtime: go126
 service: orbitjump
 env: standard
 
