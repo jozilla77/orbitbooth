@@ -13,7 +13,29 @@ shares one leaderboard.
 > (`API_BASE` in `game/js/game.js`). Any other host can override it by setting
 > `window.ORBIT_API_BASE` before `game.js` loads.
 
-## One-time setup
+## Quick path (scripts)
+
+From the repo root, after `gcloud auth login`:
+
+```bash
+# Git Bash / macOS / Linux
+gcloud auth login
+bash deploy/setup.sh     # one-time: APIs + Firestore DB + IAM (idempotent)
+bash deploy/deploy.sh    # copies game/ in and deploys the service + routing
+```
+
+```powershell
+# Windows PowerShell
+gcloud auth login
+.\deploy\setup.ps1       # one-time
+.\deploy\deploy.ps1      # deploy (re-run this for every future update)
+```
+
+The scripts auto-detect your App Engine region for Firestore, set
+`CLOUDSDK_PYTHON` if needed, and are safe to re-run. The manual equivalents are
+below if you prefer to run each step yourself.
+
+## One-time setup (manual)
 
 All commands assume the Google Cloud SDK. On Windows in Git Bash, if `gcloud`
 complains it can't find Python, run once per shell:
