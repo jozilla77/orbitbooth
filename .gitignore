@@ -20,3 +20,6 @@ backend/main.exe
 
 # App Engine orbitjump service: static payload is copied from game/ at deploy time
 deploy/orbitjump/public/
+
+# Local packaging artifact for Cloud Shell upload
+/orbitjump-deploy.zip
