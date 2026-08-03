@@ -130,6 +130,9 @@ body{
 }
 .btn-ghost:active{ box-shadow:0 2px 0 #ffd0e4; }
 .menu-row{ display:flex; gap:10px; margin-top:12px; }
+.toggles{ margin-top:10px; }
+.toggle{ font-size:15px; padding:11px 10px; }
+.toggle.off{ opacity:.5; }
 
 /* ---------- How to play ---------- */
 .panel-title{

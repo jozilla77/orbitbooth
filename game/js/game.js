@@ -964,10 +964,12 @@ function loop(now){
 // ============================================================
 //  SOUND (WebAudio, synthesized — no files)
 // ============================================================
-let actx = null, muted = localStorage.getItem('orbit_mute') === '1';
+let actx = null;
+let sfxOn   = localStorage.getItem('orbit_sfx')   !== '0'; // sound effects (default on)
+let musicOn = localStorage.getItem('orbit_music') !== '0'; // background music (default on)
 function audioInit(){ if (!actx) { try { actx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e){} } if (actx && actx.state==='suspended') actx.resume(); }
 function tone(freq, dur, type='sine', vol=0.2, slide=0){
-  if (muted || !actx) return;
+  if (!sfxOn || !actx) return;
   const o = actx.createOscillator(), g = actx.createGain();
   o.type = type; o.frequency.value = freq;
   if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(40,freq+slide), actx.currentTime+dur);
@@ -976,7 +978,7 @@ function tone(freq, dur, type='sine', vol=0.2, slide=0){
   o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime+dur);
 }
 function sfx(kind){
-  if (muted || !actx) return;
+  if (!sfxOn || !actx) return;
   if (kind==='flap') tone(520, 0.12, 'sine', 0.18, 180);
   else if (kind==='score'){ tone(880,0.09,'triangle',0.16); setTimeout(()=>tone(1320,0.12,'triangle',0.16),70); }
   else if (kind==='hit'){ tone(180,0.28,'sawtooth',0.22,-120); }
@@ -989,8 +991,12 @@ music.loop = true;
 music.volume = 0.45;
 music.preload = 'auto';
 function startMusic(){
-  if (muted) return;
-  try { music.currentTime = 0; const p = music.play(); if (p && p.catch) p.catch(()=>{}); } catch(e){}
+  if (!musicOn) return;
+  // Call play() first (it may need the user gesture); resetting currentTime can
+  // throw before the file is buffered, so never let that block playback.
+  const p = music.play();
+  if (p && p.catch) p.catch(()=>{});
+  try { music.currentTime = 0; } catch(e){}
 }
 function stopMusic(){
   try { music.pause(); music.currentTime = 0; } catch(e){}
@@ -1100,12 +1106,27 @@ let boardReturn = 'menu';
 function backFromBoard(){ boardReturn==='over' ? show('#gameover') : gotoMenu(); }
 function gotoMenu(){ stopMusic(); state = ST.MENU; $('#menuBest').textContent = game.best; show('#menu'); }
 
-$('#muteBtn').addEventListener('click', ()=>{
-  muted = !muted; localStorage.setItem('orbit_mute', muted?'1':'0');
-  $('#muteBtn').textContent = muted ? '🔇' : '🔊';
-  if (muted) { stopMusic(); }
-  else { audioInit(); if (state===ST.READY || state===ST.PLAY) startMusic(); }
-});
+// ----- audio toggles: independent Music + Sound-effects switches (on the start screen) -----
+function applyAudioUI(){
+  const m = $('#musicToggle'), s = $('#sfxToggle'), hb = $('#muteBtn');
+  if (m){ m.textContent = '🎵 Music: ' + (musicOn?'On':'Off'); m.classList.toggle('off', !musicOn); m.setAttribute('aria-pressed', String(musicOn)); }
+  if (s){ s.textContent = '🔊 Sound: ' + (sfxOn?'On':'Off'); s.classList.toggle('off', !sfxOn); s.setAttribute('aria-pressed', String(sfxOn)); }
+  if (hb){ hb.textContent = musicOn ? '🎵' : '🔇'; hb.setAttribute('aria-pressed', String(musicOn)); }
+}
+function setMusic(on){
+  musicOn = on; localStorage.setItem('orbit_music', on?'1':'0');
+  if (on){ audioInit(); if (state===ST.READY || state===ST.PLAY) startMusic(); } else stopMusic();
+  applyAudioUI();
+}
+function setSfx(on){
+  sfxOn = on; localStorage.setItem('orbit_sfx', on?'1':'0');
+  if (on) audioInit();
+  applyAudioUI();
+}
+$('#musicToggle')?.addEventListener('click', ()=>{ audioInit(); setMusic(!musicOn); });
+$('#sfxToggle')?.addEventListener('click', ()=>{ audioInit(); setSfx(!sfxOn); });
+// The in-game HUD button quietens the music (the one continuous sound during play).
+$('#muteBtn').addEventListener('click', ()=>{ audioInit(); setMusic(!musicOn); });
 
 $('#saveScoreBtn').addEventListener('click', async ()=>{
   const name = ($('#nameInput').value || '').trim().slice(0,14) || 'Player';
@@ -1193,7 +1214,7 @@ function boot(){
   resize();
   game.best = parseInt(localStorage.getItem('orbit_best')||'0',10) || 0;
   $('#menuBest').textContent = game.best;
-  $('#muteBtn').textContent = muted ? '🔇' : '🔊';
+  applyAudioUI();
   // fake-load until sprite ready (or timeout), then menu
   const done = ()=>{ state = ST.MENU; show('#menu'); };
   let waited = 0;
