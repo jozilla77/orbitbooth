@@ -17,10 +17,12 @@ handlers:
     script: auto
     secure: always
 
-  # Static game assets (served by the App Engine frontend, no instance needed)
-  - url: /orbitjump/(.*\.(js|html|css|png|jpg|jpeg|gif|svg|json|ico|wasm|woff2?))$
+  # Static game assets (served by the App Engine frontend, no instance needed).
+  # NOTE: audio types (mp3/m4a/ogg/wav) MUST be here or the background music
+  # 404s on App Engine even though it works under the local file server.
+  - url: /orbitjump/(.*\.(js|html|css|png|jpg|jpeg|gif|svg|json|ico|wasm|woff2?|mp3|m4a|ogg|wav))$
     static_files: public/\1
-    upload: public/.*\.(js|html|css|png|jpg|jpeg|gif|svg|json|ico|wasm|woff2?)$
+    upload: public/.*\.(js|html|css|png|jpg|jpeg|gif|svg|json|ico|wasm|woff2?|mp3|m4a|ogg|wav)$
     secure: always
 
   # /orbitjump and /orbitjump/ -> the game

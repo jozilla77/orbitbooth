@@ -1410,6 +1410,7 @@ if (DEV) {
     powerupAt(x,y){ powerups.push({ x, y, t:0.3, r:24*S }); },
     slow(){ slowT = SLOW_DUR; },
     dbg(){ return { px:P.x, py:P.y, pr:P.r, slowT, pu:powerups.length, themes:THEMES.length, state }; },
+    musicState(){ return { paused:music.paused, ct:+music.currentTime.toFixed(2), rs:music.readyState, err:music.error?music.error.code:0, on:musicOn, vol:music.volume, src:music.currentSrc.split('/').pop() }; },
     creature(type, xf){
       decorTimer = 99;
       const before = decor.length;
