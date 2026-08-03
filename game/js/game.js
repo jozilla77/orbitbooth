@@ -55,7 +55,9 @@ const rrect = (c, x, y, w, h, r) => {
 };
 
 // ============================================================
-//  THEMES (8 distinct rounds; last = endless finale)
+//  THEMES (18 distinct rounds; last = endless finale)
+//  7 original provinces → 10 more → Neo Bangkok (2× finale).
+//  Speed ramps smoothly 1.0×→~1.9× across the provinces, 2.0× at Neo.
 // ============================================================
 const THEMES = [
   { // ROUND 1 — Bangkok Urban Jungle
@@ -135,7 +137,117 @@ const THEMES = [
     petal:'#ffd7ec', clouds:'#f6f7ff', creatures:['deer','bird'], flowers:true,
     spd:292, gap:200, spawn:282,
   },
-  { // ROUND 8 — Futuristic Bangkok (flying cars, robots, trains) — endless, 2x speed
+  { // ROUND 8 — Yala (Betong sea-of-mist highlands, lakes, birds)
+    name:'Yala', sub:'Sea of Mist', terrain:'land',
+    sky:['#bfe3df','#dcefe6','#fbf1dc'],
+    sun:'#fdeecb', sunGlow:'rgba(250,235,200,.45)',
+    far:'#9db9b2', farHaze:'rgba(255,255,255,.6)',
+    mid:'#5fa885', midDark:'#458a68',
+    ground:['#7ec48a','#54a165'], road:'#7bb491',
+    obstacle:'karst', obsBody:['#b9c3bd','#8f9b93'], obsGold:'#6fbf7a',
+    petal:'#d7f0e4', clouds:'#f2fbf6', creatures:['bird','deer'],
+    spd:300, gap:199, spawn:281,
+  },
+  { // ROUND 9 — Lampang (horse town, teak temples, elephant sanctuary)
+    name:'Lampang', sub:'Teak & Temples', terrain:'land',
+    sky:['#ffe1b0','#ffeecb','#fff6e2'],
+    sun:'#ffe3a8', sunGlow:'rgba(255,215,150,.5)',
+    far:'#c6a487', farHaze:'rgba(255,240,215,.5)',
+    mid:'#9fb266', midDark:'#7d944e',
+    ground:['#d8bd83','#b6975a'], road:'#b59a6b',
+    obstacle:'pagoda', obsBody:['#efe6d2','#c9bda0'], obsGold:'#f2c141',
+    petal:'#ffe6b8', clouds:'#fff5e6', creatures:['elephant','bird'],
+    spd:309, gap:198, spawn:280,
+  },
+  { // ROUND 10 — Ubon Ratchathani (Candle Festival, Mekong, Pha Taem cliffs)
+    name:'Ubon Ratchathani', sub:'Candle & Mekong', terrain:'land',
+    sky:['#ffd7a2','#ffe7c0','#fff4dc'],
+    sun:'#ffdf9c', sunGlow:'rgba(255,205,140,.55)',
+    far:'#c99f7f', farHaze:'rgba(255,238,214,.5)',
+    mid:'#9bb35f', midDark:'#7a9448',
+    ground:['#d6b878','#b39250'], road:'#37b9c4',
+    obstacle:'prang', obsBody:['#d8b48e','#a97e56'], obsGold:'#f2b53c',
+    petal:'#ffdf9e', clouds:'#fff2df', creatures:['bird','fish'],
+    spd:318, gap:197, spawn:279,
+  },
+  { // ROUND 11 — Chonburi (Pattaya & Bang Saen beaches)
+    name:'Chonburi', sub:'Pattaya Shores', terrain:'sea',
+    sky:['#4fc0ff','#95e0ff','#eafbff'],
+    sun:'#fff6cc', sunGlow:'rgba(255,250,200,.6)',
+    far:'#84cfc6', farHaze:'rgba(255,255,255,.42)',
+    mid:'#22c6c2', midDark:'#0fa4b2',
+    ground:['#ffe6a6','#f3cc72'], road:'#33c2d6',
+    obstacle:'palm', obsBody:['#c98d5a','#9c6538'], obsGold:'#43cf83',
+    petal:'#c4f4ff', clouds:'#ffffff', creatures:['fish','dolphin','bird'],
+    spd:327, gap:196, spawn:278,
+  },
+  { // ROUND 12 — Trang (Andaman emerald caves, dugongs, limestone)
+    name:'Trang', sub:'Emerald Andaman', terrain:'sea',
+    sky:['#59c8f4','#9fe6e0','#effbf3'],
+    sun:'#fff4cc', sunGlow:'rgba(255,248,196,.5)',
+    far:'#7fb6ac', farHaze:'rgba(255,255,255,.45)',
+    mid:'#17bfad', midDark:'#0f9f9a',
+    ground:['#ecd9a2','#cdb06c'], road:'#22c1bd',
+    obstacle:'karst', obsBody:['#c3cabb','#96a08b'], obsGold:'#6fc27f',
+    petal:'#c9f6ee', clouds:'#ffffff', creatures:['dolphin','fish','bird'],
+    spd:336, gap:195, spawn:277,
+  },
+  { // ROUND 13 — Ranong (rainforest hot springs, mangroves, monkeys)
+    name:'Ranong', sub:'Rainforest Springs', terrain:'land',
+    sky:['#bfe0d2','#d8eede','#eff7ec'],
+    sun:'#eef0cc', sunGlow:'rgba(220,235,190,.4)',
+    far:'#8fb29c', farHaze:'rgba(255,255,255,.6)',
+    mid:'#3f9d78', midDark:'#2c7d5c',
+    ground:['#7cc07e','#4f9d5a'], road:'#3ba7a0',
+    obstacle:'palm', obsBody:['#b98a56','#8a6034'], obsGold:'#54c07a',
+    petal:'#cfeede', clouds:'#eef6ef', creatures:['monkey','bird','fish'],
+    spd:345, gap:194, spawn:276,
+  },
+  { // ROUND 14 — Mae Hong Son (misty mountains, Bua Tong sunflower fields)
+    name:'Mae Hong Son', sub:'Golden Sunflowers', terrain:'land',
+    sky:['#d3ecff','#eaf6ff','#fff2d8'],
+    sun:'#fff0cf', sunGlow:'rgba(255,235,190,.5)',
+    far:'#a3c0c6', farHaze:'rgba(255,255,255,.6)',
+    mid:'#63b070', midDark:'#4a9257',
+    ground:['#8fc873','#66a24f'], road:'#79b088',
+    obstacle:'karst', obsBody:['#bcc6c0','#929c95'], obsGold:'#ffc843',
+    petal:'#ffe89e', clouds:'#f4faff', creatures:['deer','bird'], flowers:true,
+    spd:354, gap:193, spawn:275,
+  },
+  { // ROUND 15 — Ayutthaya (ancient capital ruins, prangs, elephants)
+    name:'Ayutthaya', sub:'Ancient Capital', terrain:'land',
+    sky:['#f6d9a4','#ffe9c2','#fff5df'],
+    sun:'#ffe1a4', sunGlow:'rgba(255,210,150,.5)',
+    far:'#bfa07f', farHaze:'rgba(250,236,214,.5)',
+    mid:'#a3ad6e', midDark:'#828c52',
+    ground:['#cdb083','#a98a58'], road:'#b09a72',
+    obstacle:'prang', obsBody:['#c7a483','#98704e'], obsGold:'#e8b23c',
+    petal:'#ffdfae', clouds:'#fff2e0', creatures:['elephant','bird'],
+    spd:363, gap:192, spawn:274,
+  },
+  { // ROUND 16 — Sisaket (Khmer ruins, durian orchards, garlic fields)
+    name:'Sisaket', sub:'Khmer Frontier', terrain:'land',
+    sky:['#ffe0ad','#ffedcb','#f4ffe4'],
+    sun:'#ffdf9e', sunGlow:'rgba(255,205,140,.5)',
+    far:'#c0a985', farHaze:'rgba(250,244,218,.5)',
+    mid:'#8fb257', midDark:'#6e9440',
+    ground:['#c9c07a','#a29a4f'], road:'#a7b06a',
+    obstacle:'prang', obsBody:['#cdaa84','#9d7752'], obsGold:'#eeb43a',
+    petal:'#f2e9a8', clouds:'#fbf6df', creatures:['bird','elephant'],
+    spd:372, gap:191, spawn:273,
+  },
+  { // ROUND 17 — Rayong (beaches & tropical fruit orchards, Ko Samet)
+    name:'Rayong', sub:'Fruit Coast', terrain:'sea',
+    sky:['#46bcff','#8fddff','#eafaff'],
+    sun:'#fff4c6', sunGlow:'rgba(255,248,190,.6)',
+    far:'#82c9c0', farHaze:'rgba(255,255,255,.42)',
+    mid:'#1fc7bd', midDark:'#0fa39c',
+    ground:['#ffe1a0','#f0c66c'], road:'#2fbecb',
+    obstacle:'coral', obsBody:['#ff9a76','#e56b52'], obsGold:'#ff7fb0',
+    petal:'#c6f2ff', clouds:'#ffffff', creatures:['fish','dolphin','bird'],
+    spd:382, gap:190, spawn:272,
+  },
+  { // ROUND 18 — Futuristic Bangkok (flying cars, robots, trains) — endless, 2x speed
     name:'Neo Bangkok', sub:'Year 3000 · 2× SPEED', terrain:'city',
     sky:['#241a4e','#5b2d82','#ff7fb0'],
     sun:'#ffd0f0', sunGlow:'rgba(255,150,230,.45)',
@@ -162,7 +274,8 @@ const game = {
   t:0,
 };
 // score thresholds to advance into each next round (one per gap between the 8 stages)
-const ROUND_UP = THEMES.slice(1).map((_, i) => (i + 1) * 10); // [10,20,30,40,50,60,70]
+// advance one stage every 10 points; derived so it scales with THEMES.length
+const ROUND_UP = THEMES.slice(1).map((_, i) => (i + 1) * 10);
 const LAST_ROUND = THEMES.length - 1;
 
 const pipes = [];
@@ -170,6 +283,14 @@ const petals = [];
 const puffs = [];
 const decor = [];       // themed wildlife / vehicles
 let decorTimer = 0;
+
+// ----- slow-motion power-up (the sparkle collectible) -----
+const powerups = [];          // floating sparkles in the world
+let powerTimer = 7;           // seconds until the next sparkle spawns
+let slowT = 0;               // remaining slow-motion time (real seconds)
+const SLOW_FACTOR = 0.5;     // world runs at half speed while active
+const SLOW_DUR = 5;          // seconds of slow-mo per sparkle
+const POWER_MIN = 12, POWER_MAX = 20; // spawn interval range (seconds)
 
 // player
 const P = { x:0, y:0, vy:0, size:0, r:0, frame:0, flapT:0, dead:false, tilt:0 };
@@ -200,6 +321,7 @@ function applyRound(idx) {
 function startGame() {
   hideAll();
   pipes.length = 0; petals.length = 0; puffs.length = 0;
+  powerups.length = 0; powerTimer = 7; slowT = 0;
   game.score = 0; game.t = 0;
   game.scrollFar = game.scrollMid = game.scrollGround = game.cloudX = 0;
   newPlayToken();            // mint a fresh, server-timed anti-cheat token for this run
@@ -319,6 +441,11 @@ function updateDecor(dt, sp){
 }
 
 function update(dt) {
+  // Slow-motion power-up: the timer counts down in REAL time, but everything
+  // else in the world (physics, pipes, wildlife, scroll) runs on a scaled dt,
+  // so catching a sparkle gives the player breathing room for a few seconds.
+  if (slowT > 0){ slowT = Math.max(0, slowT - dt); dt *= SLOW_FACTOR; }
+
   game.t += dt;
 
   // background scroll (always drift a little on menu for life)
@@ -405,6 +532,30 @@ function update(dt) {
     }
     if (pi.x + pi.w < -40) pipes.splice(i,1);
   }
+
+  updatePowerups(dt);
+}
+
+function spawnPowerup(){
+  const margin = 130*S;
+  const y = rand(margin, GROUND_Y - margin);
+  powerups.push({ x: W + 80*S, y, t: 0, r: 24*S });
+}
+function updatePowerups(dt){
+  powerTimer -= dt;
+  if (powerTimer <= 0 && !P.dead){ spawnPowerup(); powerTimer = rand(POWER_MIN, POWER_MAX); }
+  for (let i=powerups.length-1;i>=0;i--){
+    const pu = powerups[i];
+    pu.x -= game.speed * dt; pu.t += dt;
+    // collect (circle vs circle, a touch generous so it feels good)
+    const dx = pu.x - P.x, dy = pu.y - P.y, rr = pu.r + P.r*0.9;
+    if (!P.dead && dx*dx + dy*dy < rr*rr){
+      slowT = SLOW_DUR; sfx('power');
+      for (let k=0;k<18;k++) petals.push({ x:pu.x, y:pu.y, vx:rand(-90,90)*S, vy:rand(-120,40)*S, r:rand(3,7)*S, rot:rand(0,6.28), vr:rand(-4,4), life:1.1 });
+      powerups.splice(i,1); continue;
+    }
+    if (pu.x < -pu.r*2) powerups.splice(i,1);
+  }
 }
 
 function circleRect(cx, cy, r, rx, ry, rw, rh) {
@@ -430,9 +581,63 @@ function render() {
   drawPipes(th);
   drawGround(th);
   drawDecor('front', th);  // birds, vehicles & ground animals
+  drawPowerups();          // slow-mo sparkles float above the world
   drawPetals(th);
   if (state === ST.READY || state === ST.PLAY || state === ST.OVER) drawPlayer();
 
+  ctx.restore();
+  drawSlowmo();            // full-screen tint + indicator (screen space)
+}
+
+// 4-point kawaii sparkle outline (concave sides pinched toward the centre)
+function sparkPath(c, R){
+  const pinch = R*0.17;
+  const tips = [[R,0],[0,R],[-R,0],[0,-R]]; // right, down, left, up
+  c.beginPath();
+  c.moveTo(tips[0][0], tips[0][1]);
+  for (let k=0;k<4;k++){
+    const a = k*Math.PI/2 + Math.PI/4;
+    c.quadraticCurveTo(Math.cos(a)*pinch, Math.sin(a)*pinch, tips[(k+1)%4][0], tips[(k+1)%4][1]);
+  }
+  c.closePath();
+}
+function drawPowerups(){
+  for (const pu of powerups){
+    ctx.save();
+    ctx.translate(pu.x, pu.y);
+    ctx.rotate(Math.sin(pu.t*1.5)*0.15);
+    const pulse = 1 + Math.sin(pu.t*4)*0.07;
+    ctx.scale(pulse, pulse);
+    const R = pu.r;
+    // colourful gradient body with an icy glow (softened take on the sparkle logo)
+    ctx.save();
+    ctx.shadowColor = 'rgba(90,200,255,.9)'; ctx.shadowBlur = 22*S;
+    const g = ctx.createLinearGradient(-R,-R,R,R);
+    g.addColorStop(0,'#ff7a7a'); g.addColorStop(0.35,'#ffd23e');
+    g.addColorStop(0.65,'#3fd08a'); g.addColorStop(1,'#4c9bff');
+    ctx.fillStyle = g; sparkPath(ctx, R); ctx.fill();
+    ctx.restore();
+    // bright inner sparkle + glossy highlight
+    ctx.fillStyle = 'rgba(255,255,255,.9)'; sparkPath(ctx, R*0.42); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.95)';
+    ctx.beginPath(); ctx.ellipse(-R*0.16, -R*0.22, R*0.12, R*0.08, -0.5, 0, 7); ctx.fill();
+    ctx.restore();
+  }
+}
+function drawSlowmo(){
+  if (slowT <= 0) return;
+  ctx.save();
+  // cool tint over the whole screen, fading out as it ends
+  ctx.fillStyle = `rgba(120,200,255,${Math.min(slowT,0.6)/0.6*0.16})`;
+  ctx.fillRect(0,0,W,H);
+  // little indicator pill low-centre (clear of the HUD)
+  ctx.globalAlpha = Math.min(1, slowT/0.4);
+  const txt = '⏳ SLOW-MO';
+  ctx.font = `700 ${Math.round(20*S)}px "Baloo 2", system-ui, sans-serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const pw = ctx.measureText(txt).width + 40*S, ph = 34*S, cx = W/2, cy = H*0.8;
+  ctx.fillStyle = 'rgba(30,60,90,.62)'; rrect(ctx, cx-pw/2, cy-ph/2, pw, ph, ph/2); ctx.fill();
+  ctx.fillStyle = '#eaffff'; ctx.fillText(txt, cx, cy+1*S);
   ctx.restore();
 }
 
@@ -983,6 +1188,7 @@ function sfx(kind){
   else if (kind==='score'){ tone(880,0.09,'triangle',0.16); setTimeout(()=>tone(1320,0.12,'triangle',0.16),70); }
   else if (kind==='hit'){ tone(180,0.28,'sawtooth',0.22,-120); }
   else if (kind==='level'){ [660,880,1100,1320].forEach((f,i)=>setTimeout(()=>tone(f,0.16,'triangle',0.18),i*90)); }
+  else if (kind==='power'){ [988,1319,1760].forEach((f,i)=>setTimeout(()=>tone(f,0.18,'sine',0.16),i*60)); }
 }
 
 // ----- background music: loops during a round only, respects the mute button -----
@@ -1013,6 +1219,7 @@ function show(sel){ hideAll(); $(sel).classList.remove('hidden'); }
 function setHUD(){
   $('#scoreValue').textContent = game.score;
   $('#roundValue').textContent = game.round+1;
+  $('#roundTotal').textContent = '/'+THEMES.length;
   const start = game.round===0?0:ROUND_UP[game.round-1];
   const end = game.round<LAST_ROUND?ROUND_UP[game.round]:start+10;
   const pct = clamp((game.score-start)/(end-start),0,1)*100;
@@ -1189,6 +1396,10 @@ if (DEV) {
       mk(W*0.62); mk(W*1.05);
       game.distToNext = game.spawnGap;
     },
+    powerup(xf){ powerups.push({ x:W*(xf??0.55), y:H*0.42, t:0.3, r:24*S }); },
+    powerupAt(x,y){ powerups.push({ x, y, t:0.3, r:24*S }); },
+    slow(){ slowT = SLOW_DUR; },
+    dbg(){ return { px:P.x, py:P.y, pr:P.r, slowT, pu:powerups.length, themes:THEMES.length, state }; },
     creature(type, xf){
       decorTimer = 99;
       const before = decor.length;
