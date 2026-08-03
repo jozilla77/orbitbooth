@@ -1,2 +1,8 @@
 # Keep shell scripts LF so they run on macOS/Linux after checkout on any OS.
 *.sh text eol=lf
+
+# Never munge line endings in binary assets.
+*.png binary
+*.jpg binary
+*.mp3 binary
+*.wav binary

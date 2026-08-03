@@ -25,3 +25,7 @@ deploy/orbitjump/public/
 /orbitjump-deploy.zip
 # Stray extracted copy of deploy/ from Cloud Shell zip prep
 /orbitjump-deploy/
+
+# Go build artifacts
+*.exe
+deploy/orbitjump/orbitjump

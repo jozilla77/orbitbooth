@@ -10,10 +10,19 @@ const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 let W = 0, H = 0, DPR = 1, S = 1; // S = gameplay scale (H/800)
 
+// Keep the canvas backing store within WebKit's GPU-memory budget. iOS Safari
+// (and iOS Chrome, same engine) will kill and reload the tab mid-game when a
+// full-screen high-DPI canvas + per-frame gradients/shadows exhaust it — which
+// looks like a random "crash" after ~30s of play. Cap DPR at 2 and clamp the
+// total device-pixel count as a hard safety net for large/landscape screens.
+const MAX_BACKING_PIXELS = 2600000; // ~2.6 MP
 function resize() {
-  DPR = Math.min(window.devicePixelRatio || 1, 3);
   W = canvas.clientWidth;
   H = canvas.clientHeight;
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  if (W * H * DPR * DPR > MAX_BACKING_PIXELS) {
+    DPR = Math.max(1, Math.sqrt(MAX_BACKING_PIXELS / (W * H)));
+  }
   canvas.width = Math.round(W * DPR);
   canvas.height = Math.round(H * DPR);
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -193,12 +202,14 @@ function startGame() {
   pipes.length = 0; petals.length = 0; puffs.length = 0;
   game.score = 0; game.t = 0;
   game.scrollFar = game.scrollMid = game.scrollGround = game.cloudX = 0;
+  newPlayToken();            // mint a fresh, server-timed anti-cheat token for this run
   applyRound(0);
   game.distToNext = W * 0.6;
   P.y = H * 0.42; P.vy = 0; P.dead = false; P.tilt = 0; P.frame = 0; P.flapT = 0;
   setHUD();
   hud.classList.remove('hidden');
   state = ST.READY;
+  startMusic();
   showBanner(0);
   clearTimeout(hintTimer);
   hintTimer = setTimeout(()=>{ if (state===ST.READY) $('#readyHint').classList.remove('hidden'); }, 1300);
@@ -229,6 +240,7 @@ function die() {
 
 function gameOver() {
   state = ST.OVER;
+  stopMusic();
   hud.classList.add('hidden');
   $('#readyHint').classList.add('hidden');
   const newBest = game.score > game.best;
@@ -971,6 +983,19 @@ function sfx(kind){
   else if (kind==='level'){ [660,880,1100,1320].forEach((f,i)=>setTimeout(()=>tone(f,0.16,'triangle',0.18),i*90)); }
 }
 
+// ----- background music: loops during a round only, respects the mute button -----
+const music = new Audio('assets/Puddle_Jumpers.mp3');
+music.loop = true;
+music.volume = 0.45;
+music.preload = 'auto';
+function startMusic(){
+  if (muted) return;
+  try { music.currentTime = 0; const p = music.play(); if (p && p.catch) p.catch(()=>{}); } catch(e){}
+}
+function stopMusic(){
+  try { music.pause(); music.currentTime = 0; } catch(e){}
+}
+
 // ============================================================
 //  UI / DOM wiring
 // ============================================================
@@ -1007,6 +1032,18 @@ const GAME_ID = 'orbit_jump';
 // A host can override by setting window.ORBIT_API_BASE before this script loads.
 const API_BASE = (window.ORBIT_API_BASE || 'https://jozilla.loxleyorbit.com/orbitjump').replace(/\/+$/,'');
 
+// Anti-injection play token. Minted by the server when a run starts (startGame);
+// the server checks its signature + age when the score is submitted, so a raw
+// POST with a made-up number is rejected. See deploy/orbitjump/main.go.
+let playToken = null;
+async function newPlayToken(){
+  playToken = null;
+  try {
+    const r = await fetch(API_BASE+'/api/session', {cache:'no-store'});
+    if (r.ok){ const j = await r.json(); playToken = j.token || null; }
+  } catch(e){ /* offline: submit will fall back to the local cache */ }
+}
+
 function localBoard(){ try { return JSON.parse(localStorage.getItem('orbit_board')||'[]'); } catch(e){ return []; } }
 function cacheLocal(entry){ // offline safety net only — the server is the source of truth
   const b = localBoard(); b.push(entry);
@@ -1017,7 +1054,7 @@ async function submitScore(name, score){
   try {
     const r = await fetch(API_BASE+'/api/score', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ playerName:name, score, gameName:GAME_ID })
+      body: JSON.stringify({ playerName:name, score, gameName:GAME_ID, token: playToken })
     });
     if (r.ok){ cacheLocal({ name, score, ts:Date.now(), mine:true }); return 'server'; }
     return 'error';
@@ -1061,12 +1098,13 @@ $('#boardBack').addEventListener('click', backFromBoard);
 $('#menuBtn').addEventListener('click', gotoMenu);
 let boardReturn = 'menu';
 function backFromBoard(){ boardReturn==='over' ? show('#gameover') : gotoMenu(); }
-function gotoMenu(){ state = ST.MENU; $('#menuBest').textContent = game.best; show('#menu'); }
+function gotoMenu(){ stopMusic(); state = ST.MENU; $('#menuBest').textContent = game.best; show('#menu'); }
 
 $('#muteBtn').addEventListener('click', ()=>{
   muted = !muted; localStorage.setItem('orbit_mute', muted?'1':'0');
   $('#muteBtn').textContent = muted ? '🔇' : '🔊';
-  if (!muted) audioInit();
+  if (muted) { stopMusic(); }
+  else { audioInit(); if (state===ST.READY || state===ST.PLAY) startMusic(); }
 });
 
 $('#saveScoreBtn').addEventListener('click', async ()=>{
@@ -1099,6 +1137,10 @@ function onFlapInput(e){
 }
 canvas.addEventListener('pointerdown', (e)=>{ e.preventDefault(); audioInit(); onFlapInput(e); });
 window.addEventListener('keydown', (e)=>{
+  // Don't hijack keys while the player is typing (e.g. the leaderboard name
+  // field) — otherwise "w"/Space/Up get eaten here and never reach the input.
+  const t = e.target;
+  if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
   if (e.code==='Space' || e.code==='ArrowUp' || e.code==='KeyW'){
     e.preventDefault(); audioInit();
     if (state===ST.MENU){ startGame(); return; }

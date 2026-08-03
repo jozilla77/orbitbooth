@@ -104,6 +104,8 @@ body{
 .best-line{ margin:8px 0 14px; color:var(--ink); font-weight:600; opacity:.8;}
 .best-line b{ color:var(--pink-ink); }
 .credit{ margin-top:14px; font-size:13px; opacity:.6; font-weight:600; }
+.version{ margin-top:6px; font-size:11px; opacity:.45; font-weight:600; letter-spacing:.5px; }
+.copyright{ margin-top:2px; font-size:11px; opacity:.45; font-weight:600; letter-spacing:.3px; }
 
 /* ---------- Buttons ---------- */
 .btn{

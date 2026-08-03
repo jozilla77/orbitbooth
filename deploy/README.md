@@ -94,10 +94,33 @@ script loads:
 <script src="js/game.js"></script>
 ```
 
+## Anti-injection (play tokens)
+
+As of v1.04 the API is no longer a blind "accept any number" endpoint:
+
+- The game fetches a signed **play token** from `GET /orbitjump/api/session` when a
+  round starts. `POST /orbitjump/api/score` requires it and rejects a submission
+  whose token is missing/invalid, expired, or arrives faster than the score could
+  physically be earned (~1 pt/sec of play). A raw `curl` with a made-up score is
+  refused. The HMAC signing secret is generated once and stored in Firestore
+  (`config/signing`) — it is **never** in this repo.
+- Because the token is now mandatory, **every** deployment of the game (App Engine
+  plus any other host) must ship the v1.04 `game.js`. Older clients can still read
+  the leaderboard but can no longer submit.
+- Tunables (env in `app.yaml`, all optional): `MIN_MS_PER_POINT` (default 250),
+  `TOKEN_MAX_AGE_MS` (default 6h), and `REQUIRE_PLAY_TOKEN=false` for an emergency
+  rollback that reopens submissions.
+
+To remove already-injected rows (e.g. the 8888 entry), use the moderation tool
+`tools/prune` (see its README) from Cloud Shell — it edits Firestore directly with
+your project credentials, no HTTP secret involved.
+
 ## Notes / troubleshooting
 
-- **Scores are client-reported.** The API validates types and caps values, but this
-  is a fun leaderboard, not an anti-cheat system. Harden later with auth/tokens if needed.
+- **Scores are still client-reported.** Tokens stop casual injection and instant
+  fakes, but a determined attacker who reads `game.js` could mint a token and wait.
+  For a fun leaderboard this is a deliberate, documented trade-off; add real auth if
+  the stakes rise.
 - **Firestore location is permanent** for a database — choose the right region in step 4.
 - The service targets the `go126` App Engine Standard runtime (`runtime: go126` in
   `deploy/orbitjump/app.yaml`, `go 1.26` in `go.mod`). If your project can't use it yet,
