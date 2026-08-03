@@ -23,3 +23,5 @@ deploy/orbitjump/public/
 
 # Local packaging artifact for Cloud Shell upload
 /orbitjump-deploy.zip
+# Stray extracted copy of deploy/ from Cloud Shell zip prep
+/orbitjump-deploy/
