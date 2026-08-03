@@ -609,18 +609,28 @@ function drawPowerups(){
     const pulse = 1 + Math.sin(pu.t*4)*0.07;
     ctx.scale(pulse, pulse);
     const R = pu.r;
-    // colourful gradient body with an icy glow (softened take on the sparkle logo)
+    // Gemini-style gradient around the star's four points:
+    // red (top) -> blue (right) -> green (bottom) -> yellow (left).
     ctx.save();
-    ctx.shadowColor = 'rgba(90,200,255,.9)'; ctx.shadowBlur = 22*S;
-    const g = ctx.createLinearGradient(-R,-R,R,R);
-    g.addColorStop(0,'#ff7a7a'); g.addColorStop(0.35,'#ffd23e');
-    g.addColorStop(0.65,'#3fd08a'); g.addColorStop(1,'#4c9bff');
+    ctx.shadowColor = 'rgba(255,255,255,.85)'; ctx.shadowBlur = 20*S;
+    let g;
+    if (ctx.createConicGradient){
+      g = ctx.createConicGradient(-Math.PI/2, 0, 0); // 0 = top, sweeping clockwise
+      g.addColorStop(0.00, '#ea4335'); // top    – red
+      g.addColorStop(0.25, '#4285f4'); // right  – blue
+      g.addColorStop(0.50, '#34a853'); // bottom – green
+      g.addColorStop(0.75, '#fbbc05'); // left   – yellow
+      g.addColorStop(1.00, '#ea4335');
+    } else { // older Safari: approximate with a diagonal linear gradient
+      g = ctx.createLinearGradient(0,-R,0,R);
+      g.addColorStop(0,'#ea4335'); g.addColorStop(0.4,'#4285f4');
+      g.addColorStop(0.7,'#34a853'); g.addColorStop(1,'#fbbc05');
+    }
     ctx.fillStyle = g; sparkPath(ctx, R); ctx.fill();
     ctx.restore();
-    // bright inner sparkle + glossy highlight
-    ctx.fillStyle = 'rgba(255,255,255,.9)'; sparkPath(ctx, R*0.42); ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,.95)';
-    ctx.beginPath(); ctx.ellipse(-R*0.16, -R*0.22, R*0.12, R*0.08, -0.5, 0, 7); ctx.fill();
+    // soft glossy highlight
+    ctx.fillStyle = 'rgba(255,255,255,.8)';
+    ctx.beginPath(); ctx.ellipse(-R*0.18, -R*0.24, R*0.12, R*0.07, -0.5, 0, 7); ctx.fill();
     ctx.restore();
   }
 }
