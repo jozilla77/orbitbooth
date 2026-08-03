@@ -1427,6 +1427,30 @@ if (DEV) {
       decor.push(d);
     }
   };
+  // Screenshot helper: ?dev&preview=N renders stage N (with a sparkle) for a
+  // still capture; add &star=0 to omit the sparkle.
+  const _q = new URLSearchParams(location.search);
+  if (_q.has('preview')){
+    const _i = Math.max(0, Math.min(THEMES.length-1, (+_q.get('preview'))||0));
+    // Delay past boot()'s fake loader (which shows the menu ~2.5s in) so the
+    // preview state isn't overridden before a screenshot is taken.
+    setTimeout(()=>{ try{
+      __orbit.preview(_i);
+      if (_q.get('star')!=='0') __orbit.powerup(0.6);
+      if (_q.get('slow')==='1') __orbit.slow();
+    }catch(e){} }, 3000);
+  }
+}
+
+// Reveal the start-page key art only once it has actually loaded (kept in JS,
+// not an inline <script>, so it also works under the extension's strict CSP);
+// a missing/blocked file falls back to the animated mascot + text logo.
+function revealStartArt(){
+  const art = document.getElementById('startArt');
+  if (!art) return;
+  const reveal = () => { const p = document.querySelector('.menu-panel'); if (p) p.classList.add('has-art'); };
+  if (art.complete && art.naturalWidth) reveal();
+  else { art.addEventListener('load', reveal); art.addEventListener('error', () => art.remove()); }
 }
 
 // ============================================================
@@ -1437,6 +1461,7 @@ function boot(){
   game.best = parseInt(localStorage.getItem('orbit_best')||'0',10) || 0;
   $('#menuBest').textContent = game.best;
   applyAudioUI();
+  revealStartArt();
   // fake-load until sprite ready (or timeout), then menu
   const done = ()=>{ state = ST.MENU; show('#menu'); };
   let waited = 0;

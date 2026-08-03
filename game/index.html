@@ -131,16 +131,5 @@
   </div>
 
   <script src="js/game.js"></script>
-  <script>
-    // Reveal the start-page key art only once it has actually loaded, so a
-    // missing/blocked file falls back to the animated mascot + text logo.
-    (function () {
-      var art = document.getElementById('startArt');
-      if (!art) return;
-      var reveal = function () { document.querySelector('.menu-panel').classList.add('has-art'); };
-      if (art.complete && art.naturalWidth) reveal();
-      else { art.addEventListener('load', reveal); art.addEventListener('error', function () { art.remove(); }); }
-    })();
-  </script>
 </body>
 </html>
