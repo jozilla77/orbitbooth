@@ -7,7 +7,7 @@
   <title>Orbit Jump</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Mochiy+Pop+One&family=Rampart+One&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -35,6 +35,7 @@
     <!-- MAIN MENU -->
     <section id="menu" class="overlay">
       <div class="panel menu-panel">
+        <img id="startArt" class="start-art" src="assets/orbit_start.jpg" alt="Orbit Jump — a kawaii journey across Thailand" />
         <div class="hero">
           <img src="assets/orbit_hero.png" alt="Orbit mascot" id="heroImg" />
           <div class="sparkle s1">✦</div><div class="sparkle s2">✧</div><div class="sparkle s3">✦</div>
@@ -130,5 +131,16 @@
   </div>
 
   <script src="js/game.js"></script>
+  <script>
+    // Reveal the start-page key art only once it has actually loaded, so a
+    // missing/blocked file falls back to the animated mascot + text logo.
+    (function () {
+      var art = document.getElementById('startArt');
+      if (!art) return;
+      var reveal = function () { document.querySelector('.menu-panel').classList.add('has-art'); };
+      if (art.complete && art.naturalWidth) reveal();
+      else { art.addEventListener('load', reveal); art.addEventListener('error', function () { art.remove(); }); }
+    })();
+  </script>
 </body>
 </html>
