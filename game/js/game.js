@@ -341,6 +341,7 @@ function beginPlay() {
   if (state !== ST.READY) return;
   state = ST.PLAY;
   $('#readyHint').classList.add('hidden');
+  if (window.gtag) gtag('event', 'game_start');
   flap();
 }
 
@@ -374,6 +375,7 @@ function gameOver() {
   $('#saveStatus').textContent = '';
   $('#saveStatus').className = 'save-status';
   $('#saveScoreBtn').disabled = false;
+  if (window.gtag) gtag('event', 'game_over', { score: game.score, stage: game.round + 1 });
   show('#gameover');
 }
 
