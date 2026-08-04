@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Orbit Jump",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A cute one-tap flying game — guide Orbit across 18 kawaii Thai provinces, grab sparkles for slow-mo, top the leaderboard.",
   "icons": {
     "16": "icons/icon16.png",

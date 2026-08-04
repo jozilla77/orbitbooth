@@ -10,6 +10,13 @@ echo "Syncing game files into the extension…"
 rm -rf "$EXT/css" "$EXT/js" "$EXT/assets" "$EXT/index.html" "$EXT/privacy.html"
 cp    "$ROOT/game/index.html"   "$EXT/"
 cp    "$ROOT/game/privacy.html" "$EXT/"
+
+# Strip the Google Analytics tag from the bundled game. The web build loads GA
+# from googletagmanager.com, but Chrome MV3 forbids remotely-hosted code in
+# extensions (it would be blocked by the extension CSP and can fail review), so
+# the extension ships without it. The block is bounded by ga:start / ga:end
+# markers in game/index.html.
+sed -i '/ga:start/,/ga:end/d' "$EXT/index.html"
 cp -r "$ROOT/game/css"          "$EXT/"
 cp -r "$ROOT/game/js"           "$EXT/"
 cp -r "$ROOT/game/assets"       "$EXT/"
