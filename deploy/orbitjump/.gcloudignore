@@ -1,0 +1,13 @@
+# gcloud upload rules for the orbitjump App Engine service.
+#
+# IMPORTANT: Do NOT add "#!include:.gitignore" here. The repo .gitignore ignores
+# deploy/orbitjump/public/ (that folder is generated from game/ at deploy time),
+# so inheriting it makes gcloud skip the ENTIRE game payload — it uploads only the
+# Go files and deploys an empty/broken service (symptom: "Uploading 3 files" and
+# the live site serving stale content). We must upload public/, so keep this file
+# minimal: ignore only VCS/build cruft, never the static payload.
+.gcloudignore
+.git
+.gitignore
+orbitjump
+*.exe
