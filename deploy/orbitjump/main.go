@@ -11,6 +11,10 @@
 // than it could physically be earned. This stops the trivial attack of POSTing
 // a made-up number straight to /api/score. The signing secret is generated once
 // and stored in Firestore (collection "config"), never in the repo.
+//
+// Tokens are SINGLE-USE: redeeming one records its nonce in Firestore, so a
+// captured token cannot be replayed to flood the board with one aged token.
+// Both endpoints are also rate limited per client IP.
 package main
 
 import (
@@ -22,6 +26,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"regexp"
@@ -50,12 +55,13 @@ type board struct {
 }
 
 const (
-	maxRows     = 100     // rows kept per game
-	topRows     = 10      // rows returned to clients
-	maxScore    = 1000000 // sanity cap to blunt obviously bogus scores
-	maxNameLen  = 20
-	collection  = "boards"
-	defaultGame = "orbit_jump"
+	maxRows      = 100     // rows kept per game
+	topRows      = 10      // rows returned to clients
+	maxScore     = 1000000 // sanity cap to blunt obviously bogus scores
+	maxNameLen   = 20
+	collection   = "boards"
+	defaultGame  = "orbit_jump"
+	usedTokenCol = "used_tokens" // redeemed token nonces (single-use enforcement)
 
 	// Play-token defaults (overridable via env). The game scores at most ~1
 	// point/second, so gating at 250 ms/point leaves a ~4x safety margin for
@@ -63,6 +69,12 @@ const (
 	defTokenMaxAgeMs = 6 * 60 * 60 * 1000 // token older than this is stale
 	tokenSkewMs      = 30 * 1000          // tolerated clock skew
 	defMinMsPerPoint = 250                // required elapsed play per point of score
+
+	// Rate limits (per client IP, per instance — see rateLimiter).
+	scoreRatePerMin   = 10 // score submissions
+	scoreBurst        = 5
+	sessionRatePerMin = 30 // token issuance
+	sessionBurst      = 10
 )
 
 var (
@@ -77,7 +89,90 @@ var (
 
 	secretMu     sync.Mutex
 	cachedSecret []byte
+
+	// Per-IP rate limiters. In-memory, so the effective ceiling is
+	// (limit x running instances) — still enough to stop scripted flooding,
+	// and it costs nothing per request. Tighten max_instances in app.yaml if
+	// you want a harder global cap.
+	scoreLimiter   = newRateLimiter(scoreRatePerMin, scoreBurst)
+	sessionLimiter = newRateLimiter(sessionRatePerMin, sessionBurst)
 )
+
+// ---- rate limiting --------------------------------------------------------
+
+type bucket struct {
+	tokens float64
+	last   time.Time
+}
+
+type rateLimiter struct {
+	mu      sync.Mutex
+	buckets map[string]*bucket
+	perSec  float64
+	burst   float64
+	lastGC  time.Time
+}
+
+func newRateLimiter(perMin int, burst int) *rateLimiter {
+	return &rateLimiter{
+		buckets: make(map[string]*bucket),
+		perSec:  float64(perMin) / 60.0,
+		burst:   float64(burst),
+		lastGC:  time.Now(),
+	}
+}
+
+// allow reports whether this key may proceed, consuming one token if so.
+func (rl *rateLimiter) allow(key string) bool {
+	now := time.Now()
+	rl.mu.Lock()
+	defer rl.mu.Unlock()
+
+	// Opportunistic GC so idle IPs don't accumulate forever.
+	if now.Sub(rl.lastGC) > 10*time.Minute {
+		for k, b := range rl.buckets {
+			if now.Sub(b.last) > 10*time.Minute {
+				delete(rl.buckets, k)
+			}
+		}
+		rl.lastGC = now
+	}
+
+	b, ok := rl.buckets[key]
+	if !ok {
+		rl.buckets[key] = &bucket{tokens: rl.burst - 1, last: now}
+		return true
+	}
+	// Refill according to elapsed time, capped at burst.
+	b.tokens += now.Sub(b.last).Seconds() * rl.perSec
+	if b.tokens > rl.burst {
+		b.tokens = rl.burst
+	}
+	b.last = now
+	if b.tokens < 1 {
+		return false
+	}
+	b.tokens--
+	return true
+}
+
+// clientIP resolves the caller's address. On App Engine the infrastructure sets
+// X-Appengine-User-IP, which (unlike X-Forwarded-For) a client cannot spoof —
+// prefer it so the rate limit can't be bypassed with a forged header.
+func clientIP(r *http.Request) string {
+	if ip := strings.TrimSpace(r.Header.Get("X-Appengine-User-IP")); ip != "" {
+		return ip
+	}
+	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
+		if first := strings.TrimSpace(strings.Split(xff, ",")[0]); first != "" {
+			return first
+		}
+	}
+	if host, _, err := net.SplitHostPort(r.RemoteAddr); err == nil {
+		return host
+	}
+	return r.RemoteAddr
+}
 
 func main() {
 	ctx := context.Background()
@@ -110,6 +205,10 @@ func main() {
 func handleSession(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		writeErr(w, http.StatusMethodNotAllowed, "method not allowed")
+		return
+	}
+	if !sessionLimiter.allow(clientIP(r)) {
+		writeErr(w, http.StatusTooManyRequests, "too many requests — slow down")
 		return
 	}
 	secret, err := getSecret(r.Context())
@@ -147,6 +246,10 @@ func handleScore(w http.ResponseWriter, r *http.Request) {
 		writeErr(w, http.StatusMethodNotAllowed, "method not allowed")
 		return
 	}
+	if !scoreLimiter.allow(clientIP(r)) {
+		writeErr(w, http.StatusTooManyRequests, "too many submissions — slow down")
+		return
+	}
 	var in struct {
 		PlayerName string `json:"playerName"`
 		Score      int    `json:"score"`
@@ -175,7 +278,7 @@ func handleScore(w http.ResponseWriter, r *http.Request) {
 			writeErr(w, http.StatusInternalServerError, "could not verify submission")
 			return
 		}
-		issued, ok := verifyToken(secret, in.Token)
+		issued, nonce, ok := verifyToken(secret, in.Token)
 		if !ok {
 			writeErr(w, http.StatusForbidden, "missing or invalid play token")
 			return
@@ -188,6 +291,18 @@ func handleScore(w http.ResponseWriter, r *http.Request) {
 		// You cannot earn `score` points in less than score*msPerPoint of play.
 		if int64(in.Score)*msPerPoint > age+tokenSkewMs {
 			writeErr(w, http.StatusForbidden, "score rejected: submitted too fast to be real")
+			return
+		}
+		// Spend the token. Done last (so a rejected score doesn't burn it) but
+		// before the board write, so a replay can never reach the leaderboard.
+		fresh, rerr := redeemToken(r.Context(), nonce)
+		if rerr != nil {
+			log.Printf("redeem token: %v", rerr)
+			writeErr(w, http.StatusInternalServerError, "could not verify submission")
+			return
+		}
+		if !fresh {
+			writeErr(w, http.StatusForbidden, "play token already used — start a new game")
 			return
 		}
 	}
@@ -257,8 +372,8 @@ func sortEntries(e []Entry) {
 // ---- Play tokens ----------------------------------------------------------
 //
 // token = "<issuedAtMs>.<nonce>.<sig>" where sig = base64url(HMAC-SHA256(secret,
-// "<issuedAtMs>.<nonce>")). Stateless: the server re-derives and compares the
-// signature, so no per-session storage is needed.
+// "<issuedAtMs>.<nonce>")). The signature is verified statelessly; the nonce is
+// then claimed once in Firestore so the same token cannot be submitted twice.
 
 func mintToken(secret []byte) string {
 	issued := time.Now().UnixMilli()
@@ -274,22 +389,51 @@ func signMsg(secret []byte, msg string) string {
 	return base64.RawURLEncoding.EncodeToString(m.Sum(nil))
 }
 
-// verifyToken returns the issuedAt (ms) if the signature is valid.
-func verifyToken(secret []byte, token string) (int64, bool) {
+// verifyToken returns the issuedAt (ms) and the nonce if the signature is valid.
+func verifyToken(secret []byte, token string) (int64, string, bool) {
 	parts := strings.Split(token, ".")
 	if len(parts) != 3 {
-		return 0, false
+		return 0, "", false
 	}
 	msg := parts[0] + "." + parts[1]
 	want := signMsg(secret, msg)
 	if subtle.ConstantTimeCompare([]byte(want), []byte(parts[2])) != 1 {
-		return 0, false
+		return 0, "", false
 	}
 	issued, err := strconv.ParseInt(parts[0], 10, 64)
 	if err != nil {
-		return 0, false
+		return 0, "", false
 	}
-	return issued, true
+	if parts[1] == "" || strings.ContainsAny(parts[1], "/.") {
+		return 0, "", false // must be usable as a Firestore document ID
+	}
+	return issued, parts[1], true
+}
+
+// redeemToken claims a token's nonce exactly once. Indirected through a var so
+// tests can substitute an in-memory store (the real one needs Firestore).
+var redeemToken = redeemTokenFirestore
+
+// redeemTokenFirestore claims a nonce using Create(), which fails with
+// AlreadyExists if the document is already there — atomic without a
+// transaction. Returns false if the token has already been spent.
+//
+// The stored doc carries expiresAt so a Firestore TTL policy on the
+// "used_tokens" collection can garbage-collect spent nonces automatically
+// (see deploy/README.md — the policy is a one-time console/gcloud setup).
+func redeemTokenFirestore(ctx context.Context, nonce string) (bool, error) {
+	ref := fsClient.Collection(usedTokenCol).Doc(nonce)
+	_, err := ref.Create(ctx, map[string]any{
+		"usedAt":    time.Now(),
+		"expiresAt": time.Now().Add(time.Duration(maxTokenAge)*time.Millisecond + time.Hour),
+	})
+	if err != nil {
+		if status.Code(err) == codes.AlreadyExists {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
 }
 
 // getSecret returns the HMAC signing secret, generating and persisting one in
@@ -353,23 +497,60 @@ func decodeSecret(data map[string]any) []byte {
 
 // ---- helpers --------------------------------------------------------------
 
+// invisibleRunes are characters that render as nothing (or reorder surrounding
+// text) but are NOT caught by unicode.IsControl, which only covers category Cc.
+// Without this, a player could submit a blank-looking name, pad a name with
+// zero-width filler, or use a bidi override to scramble the public board.
+var invisibleRunes = map[rune]bool{
+	0x00AD: true, // soft hyphen
+	0x115F: true, // Hangul choseong filler
+	0x1160: true, // Hangul jungseong filler
+	0x180E: true, // Mongolian vowel separator
+	0x2800: true, // braille pattern blank
+	0x3164: true, // Hangul filler
+	0xFFA0: true, // halfwidth Hangul filler
+}
+
+// isHidden reports whether a rune is invisible or a formatting/bidi control.
+func isHidden(r rune) bool {
+	return unicode.IsControl(r) || // Cc
+		unicode.Is(unicode.Cf, r) || // Cf: bidi overrides, ZWSP-likes, BOM
+		unicode.Is(unicode.Co, r) || // private use
+		unicode.Is(unicode.Cs, r) || // surrogates
+		!unicode.IsGraphic(r) ||
+		invisibleRunes[r]
+}
+
+// cleanName normalizes a submitted display name: strips hidden characters,
+// collapses whitespace, caps length, and requires at least one visible glyph
+// (returning "" so the caller rejects the submission).
 func cleanName(s string) string {
-	s = strings.TrimSpace(s)
 	var b strings.Builder
 	for _, r := range s {
-		if unicode.IsControl(r) {
+		if isHidden(r) {
 			continue
+		}
+		if unicode.IsSpace(r) {
+			r = ' ' // normalize exotic spaces to a plain one
 		}
 		b.WriteRune(r)
 		if b.Len() >= maxNameLen*4 { // rune-safe upper bound
 			break
 		}
 	}
-	out := []rune(b.String())
+	out := []rune(strings.Join(strings.Fields(b.String()), " ")) // collapse runs of spaces
 	if len(out) > maxNameLen {
 		out = out[:maxNameLen]
 	}
-	return strings.TrimSpace(string(out))
+	name := strings.TrimSpace(string(out))
+
+	// Require a visible, non-space character so all-blank names are rejected.
+	for _, r := range name {
+		if !unicode.IsSpace(r) && !isHidden(r) {
+			return name
+		}
+	}
+	return ""
 }
 
 func cleanGame(s string) string {
@@ -390,6 +571,12 @@ func withCORS(h http.HandlerFunc) http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		w.Header().Set("Access-Control-Max-Age", "3600")
+		// API responses are JSON only: forbid MIME sniffing, framing, and
+		// referrer leakage. (Static assets get their headers from app.yaml.)
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("X-Frame-Options", "DENY")
+		w.Header().Set("Referrer-Policy", "no-referrer")
+		w.Header().Set("Cache-Control", "no-store")
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusNoContent)
 			return

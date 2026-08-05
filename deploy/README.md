@@ -115,12 +115,52 @@ To remove already-injected rows (e.g. the 8888 entry), use the moderation tool
 `tools/prune` (see its README) from Cloud Shell — it edits Firestore directly with
 your project credentials, no HTTP secret involved.
 
+## Hardening added in v2.1
+
+- **Tokens are single-use.** Redeeming one writes its nonce to the `used_tokens`
+  collection; a replay of the same token is rejected with 403. Previously a single
+  aged token could be replayed to fill the whole board.
+- **Rate limiting.** Per-client-IP token buckets: 10/min (burst 5) on
+  `POST /api/score`, 30/min (burst 10) on `GET /api/session`; over-limit gets 429.
+  The client IP comes from `X-Appengine-User-IP`, which callers cannot spoof.
+  Limits are per instance, so the real ceiling is `limit x running instances` —
+  lower `max_instances` in `app.yaml` for a harder global cap.
+- **Stricter names.** `cleanName` now strips Unicode format/invisible characters
+  (bidi overrides like U+202E, zero-width spaces, BOM, Hangul fillers) and rejects
+  names with no visible glyph, so nobody can post a blank or text-scrambling row.
+- **Security headers.** `app.yaml` sets a CSP plus `X-Content-Type-Options`,
+  `Referrer-Policy` and `Permissions-Policy` on static files; API responses get
+  `nosniff`, `X-Frame-Options: DENY` and `no-store`.
+
+### ⚠️ One-time setup required: TTL on `used_tokens`
+
+Spent nonces accumulate forever without a TTL policy. Each doc stores `expiresAt`;
+enable Firestore TTL on that field once:
+
+```bash
+gcloud firestore fields ttls update expiresAt \
+  --collection-group=used_tokens --database=orbitjump \
+  --project=loxleyorbit-dev-jozilla --enable-ttl
+```
+
+### Notes on the CSP
+
+- `frame-ancestors 'self'` blocks embedding the game in an iframe on other
+  domains. If you want to embed it elsewhere, add those origins.
+- Google **advertising** endpoints (`google.<country>/ads/ga-audiences`,
+  `stats.g.doubleclick.net`) are deliberately not allowlisted — the privacy policy
+  says analytics is not used for advertising. The tag also sets
+  `allow_google_signals:false`. Core GA4 measurement
+  (`google-analytics.com`, `analytics.google.com`) works normally. To silence the
+  remaining ads-pixel console warning entirely, turn off Google signals in
+  GA4 Admin → Data Settings → Data Collection.
+
 ## Notes / troubleshooting
 
-- **Scores are still client-reported.** Tokens stop casual injection and instant
-  fakes, but a determined attacker who reads `game.js` could mint a token and wait.
-  For a fun leaderboard this is a deliberate, documented trade-off; add real auth if
-  the stakes rise.
+- **Scores are still client-reported.** Tokens stop casual injection, instant fakes,
+  and replay, but a determined attacker who reads `game.js` could still mint a token,
+  wait, and submit one score per token. For a fun leaderboard this is a deliberate,
+  documented trade-off; add real auth if the stakes rise.
 - **Firestore location is permanent** for a database — choose the right region in step 4.
 - The service targets the `go126` App Engine Standard runtime (`runtime: go126` in
   `deploy/orbitjump/app.yaml`, `go 1.26` in `go.mod`). If your project can't use it yet,

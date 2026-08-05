@@ -12,7 +12,13 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-8KJ7P12VFF');
+    // Google Signals / ad-personalisation are disabled: they pinged advertising
+    // endpoints (doubleclick, google.<country>/ads) that our privacy policy says
+    // we don't use, and which the Content-Security-Policy blocks.
+    gtag('config', 'G-8KJ7P12VFF', {
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false
+    });
   </script>
   <!-- ga:end -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -65,7 +71,7 @@
           <button class="btn btn-ghost toggle" id="sfxToggle" aria-pressed="true">🔊 Sound: On</button>
         </div>
         <p class="credit">Tap · Click · Space to flap</p>
-        <p class="version">Version 2.0.1</p>
+        <p class="version">Version 2.1</p>
         <p class="copyright">© 2026 Loxley Orbit</p>
       </div>
     </section>
