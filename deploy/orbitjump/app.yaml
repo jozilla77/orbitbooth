@@ -31,8 +31,16 @@ handlers:
       Referrer-Policy: strict-origin-when-cross-origin
       Permissions-Policy: "geolocation=(), camera=(), microphone=(), payment=(), usb=(), interest-cohort=()"
 
-  # /orbitjump and /orbitjump/ -> the game
-  - url: /orbitjump/?
+  # Bare /orbitjump (no trailing slash) -> the Go app 301s to /orbitjump/.
+  # Serving the page at the slash-less path makes the browser resolve its
+  # relative asset paths (css/style.css) against the site root, so the game
+  # loads completely unstyled. The redirect must come BEFORE the handler below.
+  - url: /orbitjump
+    script: auto
+    secure: always
+
+  # /orbitjump/ -> the game
+  - url: /orbitjump/
     static_files: public/index.html
     upload: public/index.html
     secure: always

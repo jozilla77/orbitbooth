@@ -193,12 +193,25 @@ func main() {
 	mux.HandleFunc("/orbitjump/api/health", withCORS(func(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusOK, map[string]any{"ok": true})
 	}))
+	mux.HandleFunc("/orbitjump", handleBareRedirect)
 
 	port := envOr("PORT", "8080")
 	log.Printf("orbitjump listening on :%s (project=%s db=%s requireToken=%v)", port, projectID, dbID, requireToken)
 	if err := http.ListenAndServe(":"+port, mux); err != nil {
 		log.Fatal(err)
 	}
+}
+
+// handleBareRedirect sends /orbitjump -> /orbitjump/ (301), preserving any query
+// string. Without the trailing slash the browser resolves the page's relative
+// asset paths (css/style.css) against the site root, so the game renders with no
+// CSS, images or script at all.
+func handleBareRedirect(w http.ResponseWriter, r *http.Request) {
+	target := "/orbitjump/"
+	if r.URL.RawQuery != "" {
+		target += "?" + r.URL.RawQuery
+	}
+	http.Redirect(w, r, target, http.StatusMovedPermanently)
 }
 
 // GET /orbitjump/api/session -> {"token": "..."} issued for a new play session.

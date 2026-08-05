@@ -210,6 +210,26 @@ func TestTokenNonceIsSafeAsDocumentID(t *testing.T) {
 	}
 }
 
+// ---- bare-path redirect ---------------------------------------------------
+
+func TestBareOrbitjumpRedirectsToTrailingSlash(t *testing.T) {
+	cases := map[string]string{
+		"/orbitjump":               "/orbitjump/",
+		"/orbitjump?dev":           "/orbitjump/?dev",
+		"/orbitjump?preview=3&x=1": "/orbitjump/?preview=3&x=1",
+	}
+	for in, want := range cases {
+		rec := httptest.NewRecorder()
+		handleBareRedirect(rec, httptest.NewRequest(http.MethodGet, in, nil))
+		if rec.Code != http.StatusMovedPermanently {
+			t.Errorf("%s: status %d, want 301", in, rec.Code)
+		}
+		if got := rec.Header().Get("Location"); got != want {
+			t.Errorf("%s: Location %q, want %q", in, got, want)
+		}
+	}
+}
+
 // ---- single-use redemption ------------------------------------------------
 
 // memRedeemer mimics Firestore Create(): the first claim of a nonce succeeds,
